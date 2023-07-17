@@ -27,7 +27,6 @@ public class Restaurant {
     private String restaurantPhone; // 식당전화번호
 
     private Long capacity; // 최대수용인원
-    // 테이블에 String으로 표기되어 있다. Long이 더 나을 것 같으니 수정이 필요하다.
 
     private LocalDateTime openTime; // 오픈시간
 
