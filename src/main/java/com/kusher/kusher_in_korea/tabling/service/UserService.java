@@ -2,8 +2,9 @@ package com.kusher.kusher_in_korea.tabling.service;
 
 import com.kusher.kusher_in_korea.tabling.domain.Reservation;
 import com.kusher.kusher_in_korea.tabling.domain.User;
-import com.kusher.kusher_in_korea.tabling.dto.UserDto;
-import com.kusher.kusher_in_korea.tabling.repository.RestaurantRepository;
+import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
+import com.kusher.kusher_in_korea.tabling.dto.response.UserDto;
+import com.kusher.kusher_in_korea.tabling.repository.ReservationRepository;
 import com.kusher.kusher_in_korea.tabling.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final RestaurantRepository restaurantRepository;
+    private final ReservationRepository reservationRepository;
 
     // 유저 추가
     public Long createUser(UserDto userDto) {
@@ -46,14 +47,14 @@ public class UserService {
         return userId;
     }
 
-    // 유저의 예약 조회 (ReservationDto 구현 필요)
-    /*private List<ReservationDto> getUserReservation(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. id=" + userId));
-        List<Reservation> reservations = user.getReservations();
+    // 유저의 예약 조회
+    private List<ReservationDto> getUserReservation(Long userId) {
+        List<Reservation> reservations = reservationRepository.findAllByUserId(userId);
         List<ReservationDto> reservationDtos = new ArrayList<>();
         for (Reservation reservation : reservations) {
             reservationDtos.add(new ReservationDto(reservation));
         }
         return reservationDtos;
-    }*/
+    }
+
 }
