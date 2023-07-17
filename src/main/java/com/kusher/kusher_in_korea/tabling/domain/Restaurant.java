@@ -18,7 +18,7 @@ public class Restaurant {
     @Column(name = "restaurant_id")
     private Long id; // 식당번호
 
-    private Long ownerId; // 식당이름
+    private Long ownerId; // 식당주인번호
 
     private String location; // 식당주소
 
