@@ -1,4 +1,4 @@
-package com.kusher.kusher_in_korea.tabling.dto;
+package com.kusher.kusher_in_korea.tabling.dto.response;
 
 import com.kusher.kusher_in_korea.tabling.domain.User;
 import lombok.Data;
