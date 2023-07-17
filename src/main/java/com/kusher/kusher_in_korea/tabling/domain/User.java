@@ -1,5 +1,6 @@
 package com.kusher.kusher_in_korea.tabling.domain;
 
+import com.kusher.kusher_in_korea.tabling.dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,12 +31,26 @@ public class User {
         return user;
     }
 
+    public static User createUser(UserDto userDto) {
+        User user = new User();
+        user.setUserName(userDto.getUserName());
+        user.setUserPhone(userDto.getUserPhone());
+        user.setUserType(userDto.getUserType());
+        return user;
+    }
+
     // 비즈니스 로직
     // 유저 정보 수정
     public void updateUser(String userName, String userPhone, String userType) {
         this.userName = userName;
         this.userPhone = userPhone;
         this.userType = userType;
+    }
+
+    public void updateUser(UserDto userDto) {
+        this.userName = userDto.getUserName();
+        this.userPhone = userDto.getUserPhone();
+        this.userType = userDto.getUserType();
     }
 
 }
