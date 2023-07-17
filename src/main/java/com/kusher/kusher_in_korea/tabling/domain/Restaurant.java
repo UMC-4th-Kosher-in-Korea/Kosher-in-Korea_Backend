@@ -1,9 +1,9 @@
 package com.kusher.kusher_in_korea.tabling.domain;
 
-import com.kusher.kusher_in_korea.tabling.dto.CreateRestaurantDto;
-import com.kusher.kusher_in_korea.tabling.dto.CreateRestaurantMenuDto;
-import com.kusher.kusher_in_korea.tabling.dto.UpdateRestaurantDto;
-import com.kusher.kusher_in_korea.tabling.dto.UpdateRestaurantMenuDto;
+import com.kusher.kusher_in_korea.tabling.dto.request.CreateRestaurantDto;
+import com.kusher.kusher_in_korea.tabling.dto.request.CreateRestaurantMenuDto;
+import com.kusher.kusher_in_korea.tabling.dto.request.UpdateRestaurantDto;
+import com.kusher.kusher_in_korea.tabling.dto.request.UpdateRestaurantMenuDto;
 import lombok.Getter;
 import lombok.Setter;
 
