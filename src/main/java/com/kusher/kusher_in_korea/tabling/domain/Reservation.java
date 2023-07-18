@@ -1,9 +1,12 @@
 package com.kusher.kusher_in_korea.tabling.domain;
 
+import com.kusher.kusher_in_korea.tabling.dto.request.CreateReservationDto;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -11,7 +14,8 @@ import javax.persistence.*;
 @Table(name = "reservation")
 public class Reservation {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
     private Long id; // 예약번호
 
@@ -23,47 +27,35 @@ public class Reservation {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant; // 식당(식당번호)
 
-    private String reservationDate; // 예약날짜
+    private LocalDate reservationDate; // 예약날짜
 
-    private String reservationTime; // 예약시간
+    private LocalTime reservationTime; // 예약시간
 
     private Long numberOfPeople; // 예약인원
 
     private String status; // 예약상태
 
     // 생성 메서드
-    public static Reservation createReservation(User user, Restaurant restaurant, String reservationDate, String reservationTime, Long numberOfPeople, String status) {
+    public static Reservation createReservation(CreateReservationDto createReservationDto) {
         Reservation reservation = new Reservation();
-        reservation.setUser(user);
-        reservation.setRestaurant(restaurant);
-        reservation.setReservationDate(reservationDate);
-        reservation.setReservationTime(reservationTime);
-        reservation.setNumberOfPeople(numberOfPeople);
-        reservation.setStatus(status);
+        reservation.setReservationDate(LocalDate.parse(createReservationDto.getReservationDate()));
+        reservation.setReservationTime(LocalTime.parse(createReservationDto.getReservationTime()));
+        reservation.setNumberOfPeople(createReservationDto.getNumberOfPeople());
+        reservation.setStatus("예약완료");
         return reservation;
     }
 
     // 비즈니스 로직
-    // 예약 정보 수정
-    public void updateReservation(User user, Restaurant restaurant, String reservationDate, String reservationTime, Long numberOfPeople, String status) {
-        this.user = user;
-        this.restaurant = restaurant;
-        this.reservationDate = reservationDate;
-        this.reservationTime = reservationTime;
+    // 예약 변경(날짜, 시간, 인원수)
+    public void changeReservation(String reservationDate, String reservationTime, Long numberOfPeople) {
+        this.reservationDate = LocalDate.parse(reservationDate);
+        this.reservationTime = LocalTime.parse(reservationTime);
         this.numberOfPeople = numberOfPeople;
-        this.status = status;
     }
 
     // 예약 취소(예시)
     public void cancelReservation() {
-        this.status = "취소";
-    }
-
-    // 예약 변경
-    public void changeReservation(String reservationDate, String reservationTime, Long numberOfPeople) {
-        this.reservationDate = reservationDate;
-        this.reservationTime = reservationTime;
-        this.numberOfPeople = numberOfPeople;
+        this.status = "예약취소";
     }
 
 }

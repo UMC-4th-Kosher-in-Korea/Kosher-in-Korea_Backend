@@ -9,10 +9,17 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+
+    // 특정 유저의 예약 조회
+    List<Reservation> findAllByUserId(Long userId);
+
+    // 특정 식당의 예약 조회 (오래된 시간이 늦게 나오도록 정렬)
+    List<Reservation> findByRestaurantIdOrderByReservationDateDescReservationTimeDesc(Long restaurantId);
 
     //동일한 날짜,시간대의 식당 총 예약인원 확인
     @Query("select sum(r.numberOfPeople) "
