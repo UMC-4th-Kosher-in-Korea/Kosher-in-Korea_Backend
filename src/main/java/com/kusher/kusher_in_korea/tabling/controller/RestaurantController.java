@@ -1,0 +1,73 @@
+package com.kusher.kusher_in_korea.tabling.controller;
+
+import com.kusher.kusher_in_korea.tabling.dto.request.*;
+import com.kusher.kusher_in_korea.tabling.dto.response.RestaurantDto;
+import com.kusher.kusher_in_korea.tabling.dto.response.RestaurantMenuDto;
+import com.kusher.kusher_in_korea.tabling.service.RestaurantService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/restaurant")
+@RequiredArgsConstructor
+public class RestaurantController {
+    private final RestaurantService restaurantService;
+
+    // 모든 식당 조회
+    @GetMapping
+    public List<RestaurantDto> getAllRestaurants() {
+        return restaurantService.findAllRestaurant();
+    }
+
+    // 특정 식당 조회
+    @GetMapping("/{restaurantId}")
+    public ResponseEntity<RestaurantDto> getRestaurantById(@PathVariable Long restaurantId) {
+        Optional<RestaurantDto> restaurantDto = restaurantService.findRestaurant(restaurantId);
+        return restaurantDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    // 특정 식당 메뉴 조회
+    @GetMapping("/{restaurantId}/menus")
+    public List<RestaurantMenuDto> getRestaurantMenus(@PathVariable Long restaurantId) {
+        return restaurantService.findRestaurantMenu(restaurantId);
+    }
+
+    // 새 식당 추가 (점주 타입만 가능)
+    @PostMapping
+    public ResponseEntity<Long> addNewRestaurant(@RequestBody CreateRestaurantDto createRestaurantDto) {
+        Long restaurantId = restaurantService.saveRestaurant(createRestaurantDto);
+        return ResponseEntity.ok(restaurantId);
+    }
+
+    // 특정 식당 정보 수정
+    @PutMapping("/{restaurantId}")
+    public ResponseEntity<Long> updateRestaurantInfo(@PathVariable Long restaurantId, @RequestBody UpdateRestaurantDto restaurantDto) {
+        Long updatedRestaurantId = restaurantService.updateRestaurant(restaurantId, restaurantDto);
+        return ResponseEntity.ok(updatedRestaurantId);
+    }
+
+    // 특정 식당 메뉴 추가
+    @PostMapping("/{restaurantId}/menu")
+    public ResponseEntity<Long> addNewRestaurantMenu(@PathVariable Long restaurantId, @RequestBody CreateRestaurantMenuDto createRestaurantMenuDto) {
+        Long menuId = restaurantService.saveRestaurantMenu(restaurantId, createRestaurantMenuDto);
+        return ResponseEntity.ok(menuId);
+    }
+
+    // 특정 식당 메뉴 수정
+    @PutMapping("/{restaurantId}/menu/{menuId}")
+    public ResponseEntity<Long> updateRestaurantMenu(@PathVariable Long restaurantId, @PathVariable Long menuId, @RequestBody UpdateRestaurantMenuDto restaurantMenuDto) {
+        restaurantService.updateRestaurantMenu(restaurantId, menuId, restaurantMenuDto);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 특정 식당 메뉴 삭제
+    @DeleteMapping("/{restaurantId}/menu/{menuId}")
+    public ResponseEntity<Long> deleteRestaurantMenu(@PathVariable Long restaurantId, @PathVariable Long menuId, @RequestBody DeleteRestaurantMenuDto deleteRestaurantMenuDto) {
+        restaurantService.deleteRestaurantMenu(restaurantId, menuId, deleteRestaurantMenuDto);
+        return ResponseEntity.noContent().build();
+    }
+}
