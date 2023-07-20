@@ -15,7 +15,7 @@ import java.util.List;
 public class ReservationController {
     private final ReservationService reservationService;
 
-    // 전체 예약 조회 -> 필요한건지? 유저의 예약조회는 유저서비스에서 처리하던데 유저 컨트롤러에서 다뤄야하는건지?
+    // 전체 예약 조회
     @GetMapping
     public ResponseEntity<List<ReservationDto>> findAllReservations() {
         List<ReservationDto> allReservations = reservationService.findAllReservation();
@@ -29,7 +29,7 @@ public class ReservationController {
         return reservationId;
     }
 
-    // 예약 수정 -> updatdReservation이 private일때 어떻게 사용할 수 있는지
+    // 예약 수정
     @PutMapping("/{reservationId}")
     public ResponseEntity<Long> updateReservation(
             @PathVariable Long reservationId,
@@ -39,8 +39,8 @@ public class ReservationController {
         return ResponseEntity.ok(updatedReservationId);
     }
 
-    // 예약 취소 -> 예약 수정과 마찬가지로 private 메소드
-    @DeleteMapping("/{reservationId}")
+    // 예약 취소
+    @PutMapping("/{reservationId}/cancel")
     public ResponseEntity<Void> cancelReservation(@PathVariable Long reservationId) {
         reservationService.cancelReservation(reservationId);
         return ResponseEntity.noContent().build();

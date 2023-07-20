@@ -45,7 +45,7 @@ public class ReservationService {
     }
 
     // 예약 수정(시간, 인원수)
-    private Long updateReservation(Long reservationId, UpdateReservationDto updateReservationDto) {
+    public Long updateReservation(Long reservationId, UpdateReservationDto updateReservationDto) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
         // 여기 isExceed 필요
         reservation.changeReservation(updateReservationDto.getReservationDate(), updateReservationDto.getReservationTime(), updateReservationDto.getNumberOfPeople());
@@ -54,7 +54,7 @@ public class ReservationService {
     }
 
     // 예약 취소(상태 변경)
-    private void cancelReservation(Long reservationId) {
+    public void cancelReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
         reservation.cancelReservation();
         reservationRepository.save(reservation);
