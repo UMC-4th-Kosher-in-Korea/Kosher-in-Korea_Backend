@@ -19,8 +19,9 @@ public class RestaurantController {
 
     // 모든 식당 조회
     @GetMapping
-    public List<RestaurantDto> getAllRestaurants() {
-        return restaurantService.findAllRestaurant();
+    public ResponseEntity<List<RestaurantDto>> getAllRestaurants() {
+        List<RestaurantDto> restaurants = restaurantService.findAllRestaurant();
+        return ResponseEntity.ok(restaurants);
     }
 
     // 특정 식당 조회
@@ -31,9 +32,10 @@ public class RestaurantController {
     }
 
     // 특정 식당 메뉴 조회
-    @GetMapping("/{restaurantId}/menus")
-    public List<RestaurantMenuDto> getRestaurantMenus(@PathVariable Long restaurantId) {
-        return restaurantService.findRestaurantMenu(restaurantId);
+    @GetMapping("/{restaurantId}/menu")
+    public ResponseEntity<List<RestaurantMenuDto>> getRestaurantMenus(@PathVariable Long restaurantId) {
+        List<RestaurantMenuDto> menuDtos = restaurantService.findRestaurantMenu(restaurantId);
+        return ResponseEntity.ok(menuDtos);
     }
 
     // 새 식당 추가 (점주 타입만 가능)
