@@ -62,7 +62,7 @@ public class RestaurantService {
     }
 
     // 특정 식당의 예약 내역 조회 (오래된 예약이 뒤에 나오도록 정렬)
-    private List<ReservationDto> getReservationList(Long restaurantId, RequestReservationListDto requestReservationListDto) {
+    public List<ReservationDto> getReservationList(Long restaurantId, RequestReservationListDto requestReservationListDto) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException("해당 식당이 없습니다. id=" + restaurantId));
         if (!isOwner(restaurant.getOwnerId(), requestReservationListDto.getUserId())) {
             throw new IllegalArgumentException("해당 유저는 이 식당의 주인이 아닙니다. id=" + requestReservationListDto.getUserId());

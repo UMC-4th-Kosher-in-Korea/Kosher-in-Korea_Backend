@@ -48,7 +48,7 @@ public class UserService {
     }
 
     // 유저의 예약 조회
-    private List<ReservationDto> getUserReservation(Long userId) {
+    public List<ReservationDto> getUserReservation(Long userId) {
         List<Reservation> reservations = reservationRepository.findAllByUserId(userId);
         List<ReservationDto> reservationDtos = new ArrayList<>();
         for (Reservation reservation : reservations) {
