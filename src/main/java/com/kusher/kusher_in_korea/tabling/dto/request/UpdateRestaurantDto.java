@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UpdateRestaurantDto {
+    private Long Id; // 식당번호
 
     private Long userId; // 유저번호 (식당 주인임을 확인하기 위함)
 

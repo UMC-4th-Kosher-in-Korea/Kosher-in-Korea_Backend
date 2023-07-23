@@ -40,7 +40,7 @@ public class ReservationController {
     }
 
     // 예약 취소
-    @PutMapping("/{reservationId}/cancel")
+    @PutMapping("/{reservationId}")
     public ResponseEntity<Void> cancelReservation(@PathVariable Long reservationId) {
         reservationService.cancelReservation(reservationId);
         return ResponseEntity.noContent().build();

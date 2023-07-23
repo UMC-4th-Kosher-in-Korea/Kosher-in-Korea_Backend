@@ -10,7 +10,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class CreateRestaurantDto { // 식당 추가 요청
-
     private Long userId; // 식당주인(유저번호)
     private String location; // 식당위치
     private String restaurantName; // 식당이름
