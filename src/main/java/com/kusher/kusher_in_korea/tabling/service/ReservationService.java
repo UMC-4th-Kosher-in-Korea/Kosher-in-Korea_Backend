@@ -3,13 +3,11 @@ package com.kusher.kusher_in_korea.tabling.service;
 import com.kusher.kusher_in_korea.tabling.domain.Reservation;
 import com.kusher.kusher_in_korea.tabling.domain.Restaurant;
 import com.kusher.kusher_in_korea.tabling.dto.request.CreateReservationDto;
-import com.kusher.kusher_in_korea.tabling.dto.request.CreateRestaurantDto;
 import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
 import com.kusher.kusher_in_korea.tabling.dto.request.UpdateReservationDto;
-import com.kusher.kusher_in_korea.tabling.dto.response.RestaurantDto;
 import com.kusher.kusher_in_korea.tabling.repository.ReservationRepository;
 import com.kusher.kusher_in_korea.tabling.repository.RestaurantRepository;
-import com.kusher.kusher_in_korea.tabling.repository.UserRepository;
+import com.kusher.kusher_in_korea.auth.repository.UserRepository;
 import com.kusher.kusher_in_korea.util.exception.CustomException;
 import com.kusher.kusher_in_korea.util.exception.ReserveFailException;
 import com.kusher.kusher_in_korea.util.exception.ResponseCode;
@@ -79,9 +77,7 @@ public class ReservationService {
     // 예약 수정(시간, 인원수)
     public Long updateReservation(Long reservationId, UpdateReservationDto updateReservationDto) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ResponseCode.RESERVATION_NOT_FOUND));
-        // 여기 isExceed 필요
-        Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(updateReservationDto.getRestaurantId());
-        Restaurant restaurant = optionalRestaurant.orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
+        Restaurant restaurant = restaurantRepository.findById(updateReservationDto.getRestaurantId()).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         String time = updateReservationDto.getReservationTime();
         LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
         checkAvailableVisitorCount(restaurant, dateTime, updateReservationDto.getNumberOfPeople().intValue());

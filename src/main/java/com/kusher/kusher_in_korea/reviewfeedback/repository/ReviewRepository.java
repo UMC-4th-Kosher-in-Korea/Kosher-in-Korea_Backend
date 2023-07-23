@@ -1,6 +1,6 @@
-package com.kusher.kusher_in_korea.tabling.repository;
+package com.kusher.kusher_in_korea.reviewfeedback.repository;
 
-import com.kusher.kusher_in_korea.tabling.domain.Review;
+import com.kusher.kusher_in_korea.reviewfeedback.domain.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
