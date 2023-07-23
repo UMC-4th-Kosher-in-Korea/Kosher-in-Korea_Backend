@@ -3,8 +3,10 @@ package com.kusher.kusher_in_korea.tabling.service;
 import com.kusher.kusher_in_korea.tabling.domain.Reservation;
 import com.kusher.kusher_in_korea.tabling.domain.Restaurant;
 import com.kusher.kusher_in_korea.tabling.dto.request.CreateReservationDto;
+import com.kusher.kusher_in_korea.tabling.dto.request.CreateRestaurantDto;
 import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
 import com.kusher.kusher_in_korea.tabling.dto.request.UpdateReservationDto;
+import com.kusher.kusher_in_korea.tabling.dto.response.RestaurantDto;
 import com.kusher.kusher_in_korea.tabling.repository.ReservationRepository;
 import com.kusher.kusher_in_korea.tabling.repository.RestaurantRepository;
 import com.kusher.kusher_in_korea.tabling.repository.UserRepository;
@@ -15,8 +17,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +29,7 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     // 전체 예약 조회
     public List<ReservationDto> findAllReservation() {
@@ -38,7 +43,11 @@ public class ReservationService {
 
     // 예약 생성
     public Long createReservation(CreateReservationDto createReservationDto) {
-        // 여기 isExceed 필요
+        Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(createReservationDto.getRestaurantId());
+        Restaurant restaurant = optionalRestaurant.orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
+        String time = createReservationDto.getReservationTime();
+        LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
+        checkAvailableVisitorCount(restaurant, dateTime, createReservationDto.getNumberOfPeople().intValue());
         Reservation reservation = Reservation.createReservation(createReservationDto);
         reservation.setRestaurant(restaurantRepository.findById(createReservationDto.getRestaurantId()).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND)));
         reservation.setUser(userRepository.findById(createReservationDto.getUserId()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND)));
@@ -70,7 +79,12 @@ public class ReservationService {
     // 예약 수정(시간, 인원수)
     public Long updateReservation(Long reservationId, UpdateReservationDto updateReservationDto) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ResponseCode.RESERVATION_NOT_FOUND));
-        // 여기 isExceed 필요 - 어떤식으로 추가해야하는지...
+        // 여기 isExceed 필요
+        Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(updateReservationDto.getRestaurantId());
+        Restaurant restaurant = optionalRestaurant.orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
+        String time = updateReservationDto.getReservationTime();
+        LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
+        checkAvailableVisitorCount(restaurant, dateTime, updateReservationDto.getNumberOfPeople().intValue());
         reservation.changeReservation(updateReservationDto.getReservationDate(), updateReservationDto.getReservationTime(), updateReservationDto.getNumberOfPeople());
         reservationRepository.save(reservation);
         return reservation.getId();

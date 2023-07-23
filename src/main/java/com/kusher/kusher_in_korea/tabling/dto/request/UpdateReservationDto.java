@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UpdateReservationDto {
     private Long reservationId; // 예약번호
+    private Long restaurantId; // 식당(식당번호)
     private String reservationDate; // 예약날짜
     private String reservationTime; // 예약시간
     private Long numberOfPeople; // 예약인원

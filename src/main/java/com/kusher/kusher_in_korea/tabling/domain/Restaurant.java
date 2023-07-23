@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,7 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant")
     private List<RestaurantMenu> restaurantMenus = new ArrayList<>(); // 식당메뉴
 
+
     // 생성 메서드
     public static Restaurant createRestaurant(CreateRestaurantDto createRestaurantDto) {
         Restaurant restaurant = new Restaurant();
@@ -59,6 +61,7 @@ public class Restaurant {
     // 비즈니스 로직
     // 식당정보 수정
     public void updateRestaurant(UpdateRestaurantDto updateRestaurantDto) {
+        this.setId(updateRestaurantDto.getId());
         this.setOwnerId(updateRestaurantDto.getUserId());
         this.setLocation(updateRestaurantDto.getLocation());
         this.setRestaurantName(updateRestaurantDto.getRestaurantName());
