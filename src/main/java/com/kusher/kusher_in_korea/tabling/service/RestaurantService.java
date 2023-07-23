@@ -11,6 +11,8 @@ import com.kusher.kusher_in_korea.tabling.dto.response.RestaurantMenuDto;
 import com.kusher.kusher_in_korea.tabling.repository.ReservationRepository;
 import com.kusher.kusher_in_korea.tabling.repository.RestaurantRepository;
 import com.kusher.kusher_in_korea.tabling.repository.UserRepository;
+import com.kusher.kusher_in_korea.util.exception.CustomException;
+import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -39,7 +41,7 @@ public class RestaurantService {
 
     // 특정 식당의 정보 조회
     public Optional<RestaurantDto> findRestaurant(Long restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException("해당 식당이 존재하지 않습니다."));
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         return Optional.of(new RestaurantDto(restaurant));
     }
 
@@ -57,15 +59,15 @@ public class RestaurantService {
 
     // 요청한 유저가 식당 주인인지 확인
     public boolean isOwner(Long restaurantId, Long ownerId) {
-        Long id = restaurantRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException("해당 식당이 없습니다. id=" + restaurantId)).getOwnerId();
+        Long id = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND)).getOwnerId();
         return (id.equals(ownerId));
     }
 
     // 특정 식당의 예약 내역 조회 (오래된 예약이 뒤에 나오도록 정렬)
-    public List<ReservationDto> getReservationList(Long restaurantId, RequestReservationListDto requestReservationListDto) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException("해당 식당이 없습니다. id=" + restaurantId));
+    private List<ReservationDto> getReservationList(Long restaurantId, RequestReservationListDto requestReservationListDto) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         if (!isOwner(restaurant.getOwnerId(), requestReservationListDto.getUserId())) {
-            throw new IllegalArgumentException("해당 유저는 이 식당의 주인이 아닙니다. id=" + requestReservationListDto.getUserId());
+            throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
         }
         List<Reservation> reservationList = reservationRepository.findByRestaurantIdOrderByReservationDateDescReservationTimeDesc(restaurantId);
         List<ReservationDto> reservationDtoList = new ArrayList<>();
@@ -77,9 +79,9 @@ public class RestaurantService {
 
     // 새 식당 추가 (점주 타입만 가능)
     public Long saveRestaurant(CreateRestaurantDto createRestaurantDto) {
-        User user = userRepository.findById(createRestaurantDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. id=" + createRestaurantDto.getUserId()));
+        User user = userRepository.findById(createRestaurantDto.getUserId()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         if (!Objects.equals(user.getUserType(), "점주"))
-            throw new IllegalArgumentException("해당 유저는 식당주인이 아닙니다. id=" + createRestaurantDto.getUserId());
+            throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
         Restaurant restaurant = Restaurant.createRestaurant(createRestaurantDto);
         restaurantRepository.save(restaurant);
         return restaurant.getId();
@@ -88,9 +90,9 @@ public class RestaurantService {
     // 특정 식당 정보 수정
     public Long updateRestaurant(Long restaurantId, UpdateRestaurantDto restaurantDto) {
         Long userId = restaurantDto.getUserId();
-        if (!isOwner(restaurantId, userId)) throw new IllegalArgumentException("해당 유저는 식당주인이 아닙니다. id=" + userId);
+        if (!isOwner(restaurantId, userId)) throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
 
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException("해당 식당이 없습니다. id=" + restaurantId));
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         restaurant.updateRestaurant(restaurantDto);
         restaurantRepository.save(restaurant);
         return restaurant.getId();
@@ -98,9 +100,9 @@ public class RestaurantService {
 
     // 특정 식당 메뉴 추가
     public Long saveRestaurantMenu(Long restaurantId, CreateRestaurantMenuDto createRestaurantMenuDto) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException("해당 식당이 없습니다. id=" + restaurantId));
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         if (!Objects.equals(createRestaurantMenuDto.getOwnerId(), restaurant.getOwnerId()))
-            throw new IllegalArgumentException("해당 유저는 식당주인이 아닙니다. id=" + createRestaurantMenuDto.getOwnerId());
+            throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
 
         restaurant.addRestaurantMenu(createRestaurantMenuDto);
         restaurantRepository.save(restaurant);
@@ -109,10 +111,9 @@ public class RestaurantService {
 
     // 특정 식당 메뉴 수정
     public Long updateRestaurantMenu(Long restaurantId, Long menuId, UpdateRestaurantMenuDto restaurantMenuDto) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException("해당 식당이 없습니다. id=" + restaurantId));
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         if (!Objects.equals(restaurantMenuDto.getOwnerId(), restaurant.getOwnerId()))
-            throw new IllegalArgumentException("해당 유저는 식당주인이 아닙니다. id=" + restaurantMenuDto.getOwnerId());
-
+            throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
         restaurant.updateRestaurantMenu(menuId, restaurantMenuDto);
         restaurantRepository.save(restaurant);
         return restaurant.getId();
@@ -120,10 +121,9 @@ public class RestaurantService {
 
     // 특정 식당 메뉴 삭제
     public Long deleteRestaurantMenu(Long restaurantId, Long menuId, DeleteRestaurantMenuDto deleteRestaurantMenuDto) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new IllegalArgumentException("해당 식당이 없습니다. id=" + restaurantId));
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         if (!Objects.equals(deleteRestaurantMenuDto.getOwnerId(), restaurant.getOwnerId()))
-            throw new IllegalArgumentException("해당 유저는 식당주인이 아닙니다. id=" + deleteRestaurantMenuDto.getOwnerId());
-
+            throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
         restaurant.deleteRestaurantMenu(menuId);
         restaurantRepository.save(restaurant);
         return restaurant.getId();

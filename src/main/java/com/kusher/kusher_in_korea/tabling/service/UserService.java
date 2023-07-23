@@ -6,6 +6,8 @@ import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
 import com.kusher.kusher_in_korea.tabling.dto.response.UserDto;
 import com.kusher.kusher_in_korea.tabling.repository.ReservationRepository;
 import com.kusher.kusher_in_korea.tabling.repository.UserRepository;
+import com.kusher.kusher_in_korea.util.exception.CustomException;
+import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,19 +32,19 @@ public class UserService {
     public void ValidationDuplicateUser(UserDto userDto) {
         List<User> findUsers = userRepository.findByUserName(userDto.getUserName());
         if (!findUsers.isEmpty()) {
-            throw new IllegalStateException("이미 존재하는 유저입니다.");
+            throw new CustomException(ResponseCode.DUPLICATED_USER);
         }
     }
 
     // 유저 정보 조회
     public UserDto getUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. id=" + userId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         return new UserDto(user);
     }
 
     // 유저 정보 수정
     public Long updateUser(Long userId, UserDto userDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다. id=" + userId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         user.updateUser(userDto);
         return userId;
     }
