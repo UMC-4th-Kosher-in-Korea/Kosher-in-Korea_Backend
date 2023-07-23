@@ -77,9 +77,7 @@ public class ReservationService {
     // 예약 수정(시간, 인원수)
     public Long updateReservation(Long reservationId, UpdateReservationDto updateReservationDto) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ResponseCode.RESERVATION_NOT_FOUND));
-        // 여기 isExceed 필요
-        Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(updateReservationDto.getRestaurantId());
-        Restaurant restaurant = optionalRestaurant.orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
+        Restaurant restaurant = restaurantRepository.findById(updateReservationDto.getRestaurantId()).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         String time = updateReservationDto.getReservationTime();
         LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
         checkAvailableVisitorCount(restaurant, dateTime, updateReservationDto.getNumberOfPeople().intValue());
