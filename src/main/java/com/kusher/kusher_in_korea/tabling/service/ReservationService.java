@@ -1,15 +1,18 @@
 package com.kusher.kusher_in_korea.tabling.service;
 
 import com.kusher.kusher_in_korea.tabling.domain.Reservation;
+import com.kusher.kusher_in_korea.tabling.domain.Restaurant;
 import com.kusher.kusher_in_korea.tabling.dto.request.CreateReservationDto;
 import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
 import com.kusher.kusher_in_korea.tabling.dto.request.UpdateReservationDto;
+import com.kusher.kusher_in_korea.tabling.exception.ReserveFailException;
 import com.kusher.kusher_in_korea.tabling.repository.ReservationRepository;
 import com.kusher.kusher_in_korea.tabling.repository.RestaurantRepository;
 import com.kusher.kusher_in_korea.tabling.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,15 +42,32 @@ public class ReservationService {
         return reservationRepository.save(reservation).getId();
     }
 
-    // 그 시간대의 최대 수용인원을 초과하는지 검증하는 메서드 필요 (추후 구현)
-    private boolean isExceed() {
-        return false;
+    // 그 시간대의 최대 수용인원을 초과하는지 검증하는 메서드
+    private void checkAvailableVisitorCount(Restaurant restaurant, LocalDateTime reservationTime, int numberOfPeople) {
+        int totalVisitorCount = reservationRepository.countTotalVisitorCount(restaurant,
+                reservationTime.toLocalDate(),
+                reservationTime.toLocalTime()
+                ).orElse(0);
+
+        boolean isAvailableVisitorCount = restaurant.isAvailableVisitorCount(totalVisitorCount, numberOfPeople);
+        if(!isAvailableVisitorCount) {
+            throw new ReserveFailException(
+                    String.format(
+                            "Resevatoin for restaurant ID %d on %s failed. "
+                            + "Requested visitor count is %d, but maximum available visitor count is %d",
+                            restaurant.getId(),
+                            reservationTime,
+                            numberOfPeople,
+                            restaurant.getCapacity() - totalVisitorCount
+                    )
+            );
+        }
     }
 
     // 예약 수정(시간, 인원수)
     public Long updateReservation(Long reservationId, UpdateReservationDto updateReservationDto) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 예약입니다."));
-        // 여기 isExceed 필요
+        // 여기 isExceed 필요 - 어떤식으로 추가해야하는지..
         reservation.changeReservation(updateReservationDto.getReservationDate(), updateReservationDto.getReservationTime(), updateReservationDto.getNumberOfPeople());
         reservationRepository.save(reservation);
         return reservation.getId();
