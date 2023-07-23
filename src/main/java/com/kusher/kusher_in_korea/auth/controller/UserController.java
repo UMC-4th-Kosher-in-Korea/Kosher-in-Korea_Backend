@@ -1,8 +1,8 @@
-package com.kusher.kusher_in_korea.tabling.controller;
+package com.kusher.kusher_in_korea.auth.controller;
 
 import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
-import com.kusher.kusher_in_korea.tabling.dto.response.UserDto;
-import com.kusher.kusher_in_korea.tabling.service.UserService;
+import com.kusher.kusher_in_korea.auth.dto.UserDto;
+import com.kusher.kusher_in_korea.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

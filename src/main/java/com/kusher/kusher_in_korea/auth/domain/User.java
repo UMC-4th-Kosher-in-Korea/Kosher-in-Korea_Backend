@@ -1,6 +1,6 @@
-package com.kusher.kusher_in_korea.tabling.domain;
+package com.kusher.kusher_in_korea.auth.domain;
 
-import com.kusher.kusher_in_korea.tabling.dto.response.UserDto;
+import com.kusher.kusher_in_korea.auth.dto.UserDto;
 import lombok.Getter;
 import lombok.Setter;
 

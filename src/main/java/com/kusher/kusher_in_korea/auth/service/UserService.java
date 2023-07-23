@@ -1,11 +1,11 @@
-package com.kusher.kusher_in_korea.tabling.service;
+package com.kusher.kusher_in_korea.auth.service;
 
 import com.kusher.kusher_in_korea.tabling.domain.Reservation;
-import com.kusher.kusher_in_korea.tabling.domain.User;
+import com.kusher.kusher_in_korea.auth.domain.User;
 import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
-import com.kusher.kusher_in_korea.tabling.dto.response.UserDto;
+import com.kusher.kusher_in_korea.auth.dto.UserDto;
 import com.kusher.kusher_in_korea.tabling.repository.ReservationRepository;
-import com.kusher.kusher_in_korea.tabling.repository.UserRepository;
+import com.kusher.kusher_in_korea.auth.repository.UserRepository;
 import com.kusher.kusher_in_korea.util.exception.CustomException;
 import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;

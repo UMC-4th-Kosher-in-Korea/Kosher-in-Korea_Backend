@@ -1,6 +1,6 @@
-package com.kusher.kusher_in_korea.tabling.repository;
+package com.kusher.kusher_in_korea.auth.repository;
 
-import com.kusher.kusher_in_korea.tabling.domain.User;
+import com.kusher.kusher_in_korea.auth.domain.User;
 import org.hibernate.usertype.UserType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

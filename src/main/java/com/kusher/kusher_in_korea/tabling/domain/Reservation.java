@@ -1,5 +1,6 @@
 package com.kusher.kusher_in_korea.tabling.domain;
 
+import com.kusher.kusher_in_korea.auth.domain.User;
 import com.kusher.kusher_in_korea.tabling.dto.request.CreateReservationDto;
 import lombok.Getter;
 import lombok.Setter;
