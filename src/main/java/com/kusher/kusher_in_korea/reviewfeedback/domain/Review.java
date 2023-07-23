@@ -1,5 +1,7 @@
-package com.kusher.kusher_in_korea.tabling.domain;
+package com.kusher.kusher_in_korea.reviewfeedback.domain;
 
+import com.kusher.kusher_in_korea.auth.domain.User;
+import com.kusher.kusher_in_korea.tabling.domain.Restaurant;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,9 +30,6 @@ public class Review {
 
     private String review; // 평가내용
 
-    private LocalDate reviewDate; // 평가날짜
+    private LocalDateTime reviewDateTime; // 평가날짜
 
-    private LocalDateTime createdAt; // 평가시각
-
-    /* 평가날짜와 시각을 LocalDateTime으로 통합하는 게 더 나을 것 같다. 팀원과 상의해보자. */
 }
