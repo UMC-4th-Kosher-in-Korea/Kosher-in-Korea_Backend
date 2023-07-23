@@ -99,4 +99,9 @@ public class Restaurant {
             }
         }
     }
+
+    //최대수용인원 확인
+    public boolean isAvailableVisitorCount(int totalCount, int requestCount) {
+        return this.capacity - totalCount >= requestCount;
+    }
 }
