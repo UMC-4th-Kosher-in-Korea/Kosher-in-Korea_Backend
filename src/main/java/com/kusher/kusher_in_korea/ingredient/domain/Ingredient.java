@@ -19,4 +19,29 @@ public class Ingredient { // 식재료 테이블
     @ManyToOne(fetch = FetchType.LAZY) // 식재료는 카테고리와 다대일 관계
     @JoinColumn(name = "category_id")
     private Category category; // 이 식재료의 카테고리
+
+    // 생성 메서드
+    public static Ingredient createIngredient(String name, int price, Category category) {
+        Ingredient ingredient = new Ingredient();
+        ingredient.setName(name);
+        ingredient.setPrice(price);
+        ingredient.setCategory(category);
+        return ingredient;
+    }
+
+    // 비즈니스 로직
+    // 식재료 가격 변경
+    public void changePrice(int price) {
+        this.price = price;
+    }
+
+    // 식재료 카테고리 변경
+    public void changeCategory(Category category) {
+        this.category = category;
+    }
+
+    // 식재료명 변경
+    public void changeName(String name) {
+        this.name = name;
+    }
 }
