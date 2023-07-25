@@ -42,10 +42,8 @@ public class Orders { // 주문은 유저와 일대다 관계
         return orders;
     }
 
-    // 주문할 식재료 추가
-    public void addOrderIngredient(OrdersIngredient ordersIngredient) {
-        ordersIngredientList.add(ordersIngredient);
-        ordersIngredient.setOrders(this);
+    public void update(Orders orders) {
+        this.delivery = orders.getDelivery();
     }
 
     // 배송지 설정
