@@ -19,4 +19,11 @@ public class Category {
     // 카테고리: 식재료는 1대다 관계
     @OneToMany(mappedBy = "category")
     private List<Ingredient> ingredients = new ArrayList<>();
+
+    // 생성 메서드
+    public static Category createCategory(String name) {
+        Category category = new Category();
+        category.setName(name);
+        return category;
+    }
 }
