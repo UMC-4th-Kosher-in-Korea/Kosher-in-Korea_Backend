@@ -1,5 +1,7 @@
 package com.kusher.kusher_in_korea.auth.controller;
 
+import com.kusher.kusher_in_korea.reviewfeedback.dto.ReviewDto;
+import com.kusher.kusher_in_korea.reviewfeedback.service.ReviewService;
 import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
 import com.kusher.kusher_in_korea.auth.dto.UserDto;
 import com.kusher.kusher_in_korea.auth.service.UserService;
@@ -15,6 +17,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final ReviewService reviewService;
 
     // 유저 추가
     @PostMapping
@@ -42,5 +45,12 @@ public class UserController {
     public ResponseEntity<List<ReservationDto>> getUserReservations(@PathVariable Long userId) {
         List<ReservationDto> reservationDtos = userService.getUserReservation(userId);
         return ResponseEntity.ok(reservationDtos);
+    }
+
+    // 유저가 남긴 리뷰 조회
+    @GetMapping("/review")
+    public ResponseEntity<List<ReviewDto>> getReviewsByUserId(@PathVariable Long userId) {
+        List<ReviewDto> reviews = reviewService.getReviewsByUserId(userId);
+        return ResponseEntity.ok(reviews);
     }
 }
