@@ -1,5 +1,6 @@
 package com.kusher.kusher_in_korea.reviewfeedback.dto;
 
+import com.kusher.kusher_in_korea.reviewfeedback.domain.Review;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,5 +12,15 @@ public class ReviewDto { // 식당별 평가, 내가 한 평가 등을 클라이
     private Long restaurantId; // 식당번호
     private String reviewContent; // 리뷰내용
     private String reviewTime; // 평가작성일시 -> LocalDateTime으로 변경될 수도 있음
-    private Long reviewScore; // 평점
+    private Long reviewRating; // 평점
+
+    public ReviewDto(Review review) {
+        this.reviewId = review.getId();
+        this.userId = review.getUser().getId();
+        this.restaurantId = review.getRestaurant().getId();
+        this.reviewContent = review.getReview();
+        this.reviewTime = review.getReviewDateTime().toString();
+        this.reviewRating = review.getRating();
+    }
+
 }

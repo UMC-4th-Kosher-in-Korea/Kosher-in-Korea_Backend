@@ -1,5 +1,7 @@
 package com.kusher.kusher_in_korea.tabling.controller;
 
+import com.kusher.kusher_in_korea.reviewfeedback.dto.ReviewDto;
+import com.kusher.kusher_in_korea.reviewfeedback.service.ReviewService;
 import com.kusher.kusher_in_korea.tabling.dto.request.*;
 import com.kusher.kusher_in_korea.tabling.dto.response.RestaurantDto;
 import com.kusher.kusher_in_korea.tabling.dto.response.RestaurantMenuDto;
@@ -16,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RestaurantController {
     private final RestaurantService restaurantService;
+    private final ReviewService reviewService;
 
     // 모든 식당 조회
     @GetMapping
@@ -71,5 +74,12 @@ public class RestaurantController {
     public ResponseEntity<Long> deleteRestaurantMenu(@PathVariable Long restaurantId, @PathVariable Long menuId, @RequestBody DeleteRestaurantMenuDto deleteRestaurantMenuDto) {
         restaurantService.deleteRestaurantMenu(restaurantId, menuId, deleteRestaurantMenuDto);
         return ResponseEntity.noContent().build();
+    }
+
+    // 특정 식당에 대한 리뷰 조회
+    @GetMapping("/{restaurantId}/reviews")
+    public ResponseEntity<List<ReviewDto>> getReviewsByRestaurantId(@PathVariable Long restaurantId) {
+        List<ReviewDto> reviews = reviewService.getReviewsByRestaurantId(restaurantId);
+        return ResponseEntity.ok(reviews);
     }
 }
