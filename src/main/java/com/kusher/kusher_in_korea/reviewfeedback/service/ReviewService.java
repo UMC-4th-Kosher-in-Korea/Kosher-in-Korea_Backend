@@ -10,25 +10,18 @@ import com.kusher.kusher_in_korea.tabling.domain.Restaurant;
 import com.kusher.kusher_in_korea.tabling.repository.RestaurantRepository;
 import com.kusher.kusher_in_korea.util.exception.CustomException;
 import com.kusher.kusher_in_korea.util.exception.ResponseCode;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-
+@RequiredArgsConstructor
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
-
-    @Autowired
-    public ReviewService(ReviewRepository reviewRepository, UserRepository userRepository, RestaurantRepository restaurantRepository) {
-        this.reviewRepository = reviewRepository;
-        this.userRepository = userRepository;
-        this.restaurantRepository = restaurantRepository;
-    }
 
     // 리뷰 생성
     public Long createReview(CreateReviewDto createReviewDto) {
@@ -51,23 +44,18 @@ public class ReviewService {
     // 특정 식당에 대한 리뷰 조회
     public List<ReviewDto> getReviewsByRestaurantId(Long restaurantId) {
         List<Review> reviews = reviewRepository.findByRestaurantId(restaurantId);
-        List<ReviewDto> reviewDtos = new ArrayList<>();
 
-        for (Review review : reviews) {
-            reviewDtos.add(new ReviewDto(review));
-        }
-        return reviewDtos;
+        return reviews.stream()
+                .map(ReviewDto::new)
+                .collect(Collectors.toList());
     }
     // 특정 유저가 남긴 평가 조회
     public List<ReviewDto> getReviewsByUserId(Long userId) {
         List<Review> reviews = reviewRepository.findByUserId(userId);
-        List<ReviewDto> reviewDtos = new ArrayList<>();
 
-        for (Review review : reviews) {
-            reviewDtos.add(new ReviewDto(review));
-        }
-
-        return reviewDtos;
+        return reviews.stream()
+                .map(ReviewDto::new)
+                .collect(Collectors.toList());
     }
 
     // 리뷰 삭제
