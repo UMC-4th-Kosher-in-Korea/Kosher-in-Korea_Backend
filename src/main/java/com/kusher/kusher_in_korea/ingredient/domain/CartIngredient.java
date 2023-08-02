@@ -26,4 +26,12 @@ public class CartIngredient { // 장바구니와 식재료의 다대다 관계�
     public int getTotalPrice() {
         return ingredient.getPrice() * getCount();
     }
+
+    public int addCount() { // + 버튼 클릭 시
+        return ++count;
+    }
+
+    public int subtractCount() { // - 버튼 클릭 시
+        return --count;
+    }
 }
