@@ -22,19 +22,16 @@ public class OrdersIngredient {
 
     private int count; // 주문 수량
 
-    private int price; // 주문 가격
-
     // 생성 메서드
-    public static OrdersIngredient createOrderIngredient(Ingredient ingredient, int count, int price) {
+    public static OrdersIngredient createOrderIngredient(Ingredient ingredient, int count) {
         OrdersIngredient ordersIngredient = new OrdersIngredient();
         ordersIngredient.setIngredient(ingredient);
         ordersIngredient.setCount(count);
-        ordersIngredient.setPrice(price);
         return ordersIngredient;
     }
 
     // 이 주문상품의 가격 조회
     public int getTotalPrice() {
-        return getPrice() * getCount();
+        return getIngredient().getPrice() * getCount();
     }
 }
