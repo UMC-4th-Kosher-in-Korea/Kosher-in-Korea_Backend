@@ -31,7 +31,7 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java:8.0.32'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'com.github.iamport:iamport-rest-client-java:0.2.21'
+	implementation 'com.github.iamport:iamport-rest-client-java:0.2.23'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
