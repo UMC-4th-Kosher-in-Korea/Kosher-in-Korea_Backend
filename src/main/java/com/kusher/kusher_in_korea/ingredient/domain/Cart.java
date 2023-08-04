@@ -22,6 +22,8 @@ public class Cart { // User와 장바구니는 일대일 관계
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<CartIngredient> cartIngredients = new ArrayList<>(); // 장바구니에 담긴 재료들
 
+    private int totalPrice = 0; // 장바구니에 담긴 재료들의 총 가격
+
     // 생성 메서드
     public static Cart createCart(User user) {
         Cart cart = new Cart();
@@ -30,30 +32,27 @@ public class Cart { // User와 장바구니는 일대일 관계
         return cart;
     }
 
-    // 비즈니스 로직
+    // 장바구니에 상품 추가
+    public void updateTotalPrice() {
+        totalPrice = 0;
+        for (CartIngredient cartIngredient : cartIngredients) {
+            totalPrice += cartIngredient.getTotalPrice();
+        }
+    }
+
     // 장바구니에 재료 추가
-    public void addCartIngredient(CartIngredient cartIngredient) {
-        cartIngredient.setCart(this);
-        cartIngredients.add(cartIngredient);
+    public void addCartIngredientPrice(CartIngredient cartIngredient) {
+        totalPrice += cartIngredient.getTotalPrice();
     }
 
-    // 장바구니에 담긴 재료 삭제
-    public void removeCartIngredient(CartIngredient cartIngredient) {
-        cartIngredients.remove(cartIngredient);
-    }
-
-    // 장바구니 특정 재료 개수 증가
-    public void addCartIngredient(CartIngredient cartIngredient, int quantity) {
-        cartIngredient.addCount();
-    }
-
-    // 장바구니 특정 재료 개수 감소
-    public void removeCartIngredient(CartIngredient cartIngredient, int quantity) {
-        cartIngredient.subtractCount();
+    // 장바구니에 재료 삭제
+    public void removeCartIngredientPrice(CartIngredient cartIngredient) {
+        totalPrice -= cartIngredient.getTotalPrice();
     }
 
     // 장바구니 비우기 (결제 완료 시 마지막에 사용할 목적)
     public void clearCart() {
         cartIngredients.clear();
+        totalPrice = 0;
     }
 }

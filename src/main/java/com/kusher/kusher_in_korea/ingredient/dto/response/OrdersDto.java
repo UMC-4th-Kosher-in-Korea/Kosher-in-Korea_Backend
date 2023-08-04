@@ -17,6 +17,7 @@ public class OrdersDto { // 주문 조회에 대한 응답
     private DeliveryDto delivery;
     private LocalDateTime orderDateTime;
     private List<OrdersIngredientDto> ordersIngredientList = new ArrayList<>();
+    private int totalPrice;
 
     public OrdersDto(Orders orders) {
         this.orderId = orders.getId();
@@ -26,5 +27,6 @@ public class OrdersDto { // 주문 조회에 대한 응답
         for (OrdersIngredient ordersIngredient : orders.getOrdersIngredientList()) {
             this.ordersIngredientList.add(new OrdersIngredientDto(ordersIngredient));
         }
+        this.totalPrice = orders.getTotalPrice();
     }
 }
