@@ -1,5 +1,6 @@
 package com.kusher.kusher_in_korea.auth.service;
 
+import com.kusher.kusher_in_korea.ingredient.domain.Cart;
 import com.kusher.kusher_in_korea.tabling.domain.Reservation;
 import com.kusher.kusher_in_korea.auth.domain.User;
 import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
@@ -25,6 +26,7 @@ public class UserService {
     public Long createUser(UserDto userDto) {
         ValidationDuplicateUser(userDto);
         User user = User.createUser(userDto);
+        Cart cart = Cart.createCart(user); // 유저 생성 시 유저가 사용할 장바구니도 생성
         return userRepository.save(user).getId();
     }
 
