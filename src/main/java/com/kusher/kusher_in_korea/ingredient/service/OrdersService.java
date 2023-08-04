@@ -41,9 +41,7 @@ public class OrdersService {
         cartIngredient.setCart(cart);
         cartIngredient.setCount(addCartIngredientDto.getCount());
         cartIngredient.setIngredient(ingredientRepository.findById(addCartIngredientDto.getIngredientId()).orElseThrow(() -> new IllegalArgumentException("해당 식재료가 존재하지 않습니다.")));
-        CartIngredient savedCartIngredient = cartIngredientRepository.save(cartIngredient);
-        cart.addCartIngredientPrice(savedCartIngredient);
-        return savedCartIngredient.getId();
+        return cartIngredientRepository.save(cartIngredient).getId();
     }
 
     // 장바구니 내부 특정 상품 개수 증가
@@ -51,8 +49,6 @@ public class OrdersService {
         CartIngredient cartIngredient = cartIngredientRepository.findById(cartIngredientId).orElseThrow(() -> new IllegalArgumentException("해당 장바구니 상품이 존재하지 않습니다."));
         cartIngredient.addCount();
         cartIngredientRepository.save(cartIngredient);
-        Cart cart = cartIngredient.getCart();
-        cart.updateTotalPrice();
     }
 
     // 장바구니 내부 특정 상품 개수 감소
@@ -60,15 +56,11 @@ public class OrdersService {
         CartIngredient cartIngredient = cartIngredientRepository.findById(cartIngredientId).orElseThrow(() -> new IllegalArgumentException("해당 장바구니 상품이 존재하지 않습니다."));
         cartIngredient.subtractCount();
         cartIngredientRepository.save(cartIngredient);
-        Cart cart = cartIngredient.getCart();
-        cart.updateTotalPrice();
     }
 
     // 장바구니 내부 특정 상품 삭제
     public void deleteCartIngredient(Long cartIngredientId) {
         CartIngredient cartIngredient = cartIngredientRepository.findById(cartIngredientId).orElseThrow(() -> new IllegalArgumentException("해당 장바구니 상품이 존재하지 않습니다."));
-        Cart cart = cartIngredient.getCart();
-        cart.removeCartIngredientPrice(cartIngredient);
         cartIngredientRepository.delete(cartIngredient);
     }
 
