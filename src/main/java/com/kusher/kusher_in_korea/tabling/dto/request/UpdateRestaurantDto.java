@@ -3,6 +3,8 @@ package com.kusher.kusher_in_korea.tabling.dto.request;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
+
 @Data
 @NoArgsConstructor
 public class UpdateRestaurantDto {
@@ -18,9 +20,9 @@ public class UpdateRestaurantDto {
 
     private Long capacity; // 최대수용인원
 
-    private String openTime; // 오픈시간
+    private LocalTime openTime; // 오픈시간
 
-    private String closeTime; // 마감시간
+    private LocalTime closeTime; // 마감시간
 
     private String description; // 식당설명
 

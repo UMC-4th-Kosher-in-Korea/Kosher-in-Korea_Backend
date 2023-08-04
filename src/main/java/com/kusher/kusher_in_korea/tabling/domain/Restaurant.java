@@ -34,15 +34,14 @@ public class Restaurant {
 
     private Long capacity; // 최대수용인원
 
-    private LocalDateTime openTime; // 오픈시간
+    private LocalTime openTime; // 오픈시간
 
-    private LocalDateTime closeTime; // 마감시간
+    private LocalTime closeTime; // 마감시간
 
     private String description; // 식당설명
 
     @OneToMany(mappedBy = "restaurant")
     private List<RestaurantMenu> restaurantMenus = new ArrayList<>(); // 식당메뉴
-
 
     // 생성 메서드
     public static Restaurant createRestaurant(CreateRestaurantDto createRestaurantDto) {
@@ -52,8 +51,8 @@ public class Restaurant {
         restaurant.setRestaurantName(createRestaurantDto.getRestaurantName());
         restaurant.setRestaurantPhone(createRestaurantDto.getRestaurantPhone());
         restaurant.setCapacity(createRestaurantDto.getCapacity());
-        restaurant.setOpenTime(LocalDateTime.parse(createRestaurantDto.getOpenTime()));
-        restaurant.setCloseTime(LocalDateTime.parse(createRestaurantDto.getCloseTime()));
+        restaurant.setOpenTime(createRestaurantDto.getOpenTime());
+        restaurant.setCloseTime(createRestaurantDto.getCloseTime());
         restaurant.setDescription(createRestaurantDto.getDescription());
         return restaurant;
     }
@@ -67,8 +66,8 @@ public class Restaurant {
         this.setRestaurantName(updateRestaurantDto.getRestaurantName());
         this.setRestaurantPhone(updateRestaurantDto.getRestaurantPhone());
         this.setCapacity(updateRestaurantDto.getCapacity());
-        this.setOpenTime(LocalDateTime.parse(updateRestaurantDto.getOpenTime()));
-        this.setCloseTime(LocalDateTime.parse(updateRestaurantDto.getCloseTime()));
+        this.setOpenTime(updateRestaurantDto.getOpenTime());
+        this.setCloseTime(updateRestaurantDto.getCloseTime());
         this.setDescription(updateRestaurantDto.getDescription());
     }
 
