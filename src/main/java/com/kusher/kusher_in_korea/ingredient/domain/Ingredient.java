@@ -33,10 +33,9 @@ public class Ingredient { // 식재료 테이블
     }
 
     // 비즈니스 로직
-    // 식재료 가격 변경
-    public void updateIngredient(String name, String image, int price, Category category) {
+    // 식재료 정보 수정
+    public void updateIngredient(String name, int price, Category category) {
         this.name = name;
-        this.image = image;
         this.price = price;
         this.category = category;
     }
