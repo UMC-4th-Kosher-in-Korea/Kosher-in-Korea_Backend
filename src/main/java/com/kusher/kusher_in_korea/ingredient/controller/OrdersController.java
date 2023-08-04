@@ -1,6 +1,7 @@
 package com.kusher.kusher_in_korea.ingredient.controller;
 
 import com.kusher.kusher_in_korea.ingredient.domain.Orders;
+import com.kusher.kusher_in_korea.ingredient.dto.request.CreateOrdersDto;
 import com.kusher.kusher_in_korea.ingredient.dto.response.OrdersDto;
 import com.kusher.kusher_in_korea.ingredient.service.OrdersService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class OrdersController {
 
     // 주문 생성
     @PostMapping("/api/orders")
-    public ResponseEntity<Long> createOrder(Orders orders) {
+    public ResponseEntity<Long> createOrder(CreateOrdersDto orders) {
         Long orderId = ordersService.createOrder(orders);
         return ResponseEntity.ok(orderId);
     }
