@@ -1,5 +1,6 @@
 package com.kusher.kusher_in_korea.auth.controller;
 
+import com.kusher.kusher_in_korea.ingredient.dto.response.CartDto;
 import com.kusher.kusher_in_korea.ingredient.dto.response.OrdersDto;
 import com.kusher.kusher_in_korea.ingredient.service.OrdersService;
 import com.kusher.kusher_in_korea.reviewfeedback.dto.ReviewDto;
@@ -62,6 +63,13 @@ public class UserController {
     public ResponseEntity<List<ReviewDto>> getReviewsByUserId(@PathVariable Long userId) {
         List<ReviewDto> reviews = reviewService.getReviewsByUserId(userId);
         return ResponseEntity.ok(reviews);
+    }
+
+    // 유저의 장바구니 조회
+    @GetMapping("/{userId}/cart")
+    public ResponseEntity<CartDto> getUserCart(@PathVariable Long userId) {
+        CartDto ordersDtos = userService.getUserCart(userId);
+        return ResponseEntity.ok(ordersDtos);
     }
 
 }
