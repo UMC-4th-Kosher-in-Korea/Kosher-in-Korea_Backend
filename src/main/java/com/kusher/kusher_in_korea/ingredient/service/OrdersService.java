@@ -1,11 +1,13 @@
 package com.kusher.kusher_in_korea.ingredient.service;
 
 import com.kusher.kusher_in_korea.ingredient.domain.Orders;
+import com.kusher.kusher_in_korea.ingredient.dto.response.OrdersDto;
 import com.kusher.kusher_in_korea.ingredient.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,18 +35,21 @@ public class OrdersService {
     }
 
     // user의 주문 조회
-    public List<Orders> getUserOrders(Long userId) {
-        return ordersRepository.findByUserId(userId);
+    public List<OrdersDto> getUserOrders(Long userId) {
+        List<Orders> orders = ordersRepository.findByUserId(userId);
+        return orders.stream().map(OrdersDto::new).collect(Collectors.toList());
     }
 
     // 특정 주문 조회
-    public Orders getOrder(Long orderId) {
-        return ordersRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
+    public OrdersDto getOrder(Long orderId) {
+        Orders order = ordersRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
+        return new OrdersDto(order);
     }
 
     // 전체 주문 조회: 관리자용 메서드
-    public List<Orders> getOrders() {
-        return ordersRepository.findAll();
+    public List<OrdersDto> getOrders() {
+        List<Orders> orders = ordersRepository.findAll();
+        return orders.stream().map(OrdersDto::new).collect(Collectors.toList());
     }
 
 }
