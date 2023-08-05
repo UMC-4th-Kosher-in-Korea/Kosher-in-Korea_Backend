@@ -1,22 +1,86 @@
 package com.kusher.kusher_in_korea.ingredient.service;
 
-import com.kusher.kusher_in_korea.ingredient.domain.Orders;
+import com.kusher.kusher_in_korea.auth.repository.UserRepository;
+import com.kusher.kusher_in_korea.ingredient.domain.*;
+import com.kusher.kusher_in_korea.ingredient.dto.request.AddCartIngredientDto;
+import com.kusher.kusher_in_korea.ingredient.dto.request.CreateOrdersDto;
+import com.kusher.kusher_in_korea.ingredient.dto.response.OrdersDto;
+import com.kusher.kusher_in_korea.ingredient.repository.CartIngredientRepository;
+import com.kusher.kusher_in_korea.ingredient.repository.CartRepository;
+import com.kusher.kusher_in_korea.ingredient.repository.IngredientRepository;
 import com.kusher.kusher_in_korea.ingredient.repository.OrdersRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class OrdersService {
 
     private final OrdersRepository ordersRepository;
+    private final UserRepository userRepository;
+    private final CartRepository cartRepository;
+    private final CartIngredientRepository cartIngredientRepository;
+    private final IngredientRepository ingredientRepository;
+
+    // 장바구니 조회 기능은 UserService에 이미 존재
+
+    // 장바구니 가격 조회
+    public int getCartPrice(Long cartId) {
+        Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new IllegalArgumentException("해당 장바구니가 존재하지 않습니다."));
+        return cart.getTotalPrice();
+    }
+
+    // 장바구니 내부에 특정 상품 추가 (장바구니 담기)
+    public Long addCartIngredient(AddCartIngredientDto addCartIngredientDto) {
+        Cart cart = cartRepository.findById(addCartIngredientDto.getCartId()).orElseThrow(() -> new IllegalArgumentException("해당 장바구니가 존재하지 않습니다."));
+        CartIngredient cartIngredient = new CartIngredient();
+        cartIngredient.setCart(cart);
+        cartIngredient.setCount(addCartIngredientDto.getCount());
+        cartIngredient.setIngredient(ingredientRepository.findById(addCartIngredientDto.getIngredientId()).orElseThrow(() -> new IllegalArgumentException("해당 식재료가 존재하지 않습니다.")));
+        return cartIngredientRepository.save(cartIngredient).getId();
+    }
+
+    // 장바구니 내부 특정 상품 개수 증가
+    public void increaseCartIngredient(Long cartIngredientId) {
+        CartIngredient cartIngredient = cartIngredientRepository.findById(cartIngredientId).orElseThrow(() -> new IllegalArgumentException("해당 장바구니 상품이 존재하지 않습니다."));
+        cartIngredient.addCount();
+        cartIngredientRepository.save(cartIngredient);
+    }
+
+    // 장바구니 내부 특정 상품 개수 감소
+    public void decreaseCartIngredient(Long cartIngredientId) {
+        CartIngredient cartIngredient = cartIngredientRepository.findById(cartIngredientId).orElseThrow(() -> new IllegalArgumentException("해당 장바구니 상품이 존재하지 않습니다."));
+        cartIngredient.subtractCount();
+        cartIngredientRepository.save(cartIngredient);
+    }
+
+    // 장바구니 내부 특정 상품 삭제
+    public void deleteCartIngredient(Long cartIngredientId) {
+        CartIngredient cartIngredient = cartIngredientRepository.findById(cartIngredientId).orElseThrow(() -> new IllegalArgumentException("해당 장바구니 상품이 존재하지 않습니다."));
+        cartIngredientRepository.delete(cartIngredient);
+    }
 
     // 주문 생성
-    public Long createOrder(Orders orders) {
-        Orders savedOrder = ordersRepository.save(orders);
-        return savedOrder.getId();
+    public Long createOrder(CreateOrdersDto createOrdersDto) {
+        Orders orders = new Orders();
+        orders.setUser(userRepository.findById(createOrdersDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다.")));
+        orders.setStatus(createOrdersDto.getOrderStatus());
+        orders.setDelivery(createOrdersDto.getDelivery());
+        orders.setOrderDateTime(LocalDateTime.now());
+        // 장바구니_상품_리스트 -> 주문_상품_리스트로 전환
+        List<OrdersIngredient> ordersIngredients = createOrdersDto.getCartIngredients().stream().map(cartIngredientDto -> {
+            CartIngredient cartIngredient = cartIngredientRepository.findById(cartIngredientDto.getCartIngredientId()).orElseThrow(() -> new IllegalArgumentException("해당 장바구니 상품이 존재하지 않습니다."));
+            OrdersIngredient ordersIngredient = new OrdersIngredient();
+            ordersIngredient.setIngredient(cartIngredient.getIngredient());
+            ordersIngredient.setCount(cartIngredient.getCount());
+            return ordersIngredient;
+        }).collect(Collectors.toList());
+        orders.setOrdersIngredientList(ordersIngredients);
+        return ordersRepository.save(orders).getId();
     }
 
     // 주문 취소
@@ -33,18 +97,21 @@ public class OrdersService {
     }
 
     // user의 주문 조회
-    public List<Orders> getUserOrders(Long userId) {
-        return ordersRepository.findByUserId(userId);
+    public List<OrdersDto> getUserOrders(Long userId) {
+        List<Orders> orders = ordersRepository.findByUserId(userId);
+        return orders.stream().map(OrdersDto::new).collect(Collectors.toList());
     }
 
     // 특정 주문 조회
-    public Orders getOrder(Long orderId) {
-        return ordersRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
+    public OrdersDto getOrder(Long orderId) {
+        Orders order = ordersRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException("해당 주문이 존재하지 않습니다."));
+        return new OrdersDto(order);
     }
 
     // 전체 주문 조회: 관리자용 메서드
-    public List<Orders> getOrders() {
-        return ordersRepository.findAll();
+    public List<OrdersDto> getOrders() {
+        List<Orders> orders = ordersRepository.findAll();
+        return orders.stream().map(OrdersDto::new).collect(Collectors.toList());
     }
 
 }

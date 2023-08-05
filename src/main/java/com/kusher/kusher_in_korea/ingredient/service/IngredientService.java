@@ -57,7 +57,7 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
     public Long addIngredient(RequestIngredientDto requestIngredientDto) {
         validateDuplicateIngredient(requestIngredientDto.getIngredientName());
         Category category = categoryRepository.findByName(requestIngredientDto.getIngredientCategory()).orElseThrow(() -> new IllegalStateException("존재하지 않는 카테고리입니다."));
-        Ingredient ingredient = Ingredient.createIngredient(requestIngredientDto.getIngredientName(), requestIngredientDto.getIngredientPrice(), category);
+        Ingredient ingredient = Ingredient.createIngredient(requestIngredientDto.getIngredientName(), requestIngredientDto.getIngredientImage(), requestIngredientDto.getIngredientPrice(), category);
         ingredientRepository.save(ingredient);
         return ingredient.getId();
     }

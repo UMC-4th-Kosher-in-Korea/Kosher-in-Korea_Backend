@@ -14,6 +14,8 @@ public class Ingredient { // 식재료 테이블
 
     private String name; // 식재료명
 
+    private String image; // 식재료 이미지
+
     private int price; // 식재료가격
 
     @ManyToOne(fetch = FetchType.LAZY) // 식재료는 카테고리와 다대일 관계
@@ -21,16 +23,17 @@ public class Ingredient { // 식재료 테이블
     private Category category; // 이 식재료의 카테고리
 
     // 생성 메서드
-    public static Ingredient createIngredient(String name, int price, Category category) {
+    public static Ingredient createIngredient(String name, String image, int price, Category category) {
         Ingredient ingredient = new Ingredient();
         ingredient.setName(name);
+        ingredient.setImage(image);
         ingredient.setPrice(price);
         ingredient.setCategory(category);
         return ingredient;
     }
 
     // 비즈니스 로직
-    // 식재료 가격 변경
+    // 식재료 정보 수정
     public void updateIngredient(String name, int price, Category category) {
         this.name = name;
         this.price = price;

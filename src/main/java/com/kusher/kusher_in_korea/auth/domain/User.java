@@ -1,6 +1,7 @@
 package com.kusher.kusher_in_korea.auth.domain;
 
 import com.kusher.kusher_in_korea.auth.dto.UserDto;
+import com.kusher.kusher_in_korea.ingredient.domain.Cart;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,8 +13,7 @@ import javax.persistence.*;
 @Table(name = "user")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id; // 유저번호
 
@@ -23,8 +23,11 @@ public class User {
 
     private String userType; // 유저유형 (일반유저 or 식당주인)
 
-    // 생성 메서드
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id")
+    private Cart cart; // 유저와 장바구니는 일대일 관계
 
+    // 생성 메서드
     public static User createUser(UserDto userDto) {
         User user = new User();
         user.setUserName(userDto.getUserName());

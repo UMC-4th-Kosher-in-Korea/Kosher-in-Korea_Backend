@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 public class RequestIngredientDto { // 식재료 생성/수정 기능
     private String ingredientName;
     private String ingredientCategory;
+    private String ingredientImage;
     private String ingredientDescription;
     private int ingredientPrice;
 }
