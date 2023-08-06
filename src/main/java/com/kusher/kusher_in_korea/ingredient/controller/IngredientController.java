@@ -1,5 +1,7 @@
 package com.kusher.kusher_in_korea.ingredient.controller;
 
+import com.kusher.kusher_in_korea.image.service.ImageUploadService;
+import com.kusher.kusher_in_korea.ingredient.dto.request.CreateIngredientDto;
 import com.kusher.kusher_in_korea.ingredient.dto.request.RequestCategoryDto;
 import com.kusher.kusher_in_korea.ingredient.dto.request.RequestIngredientDto;
 import com.kusher.kusher_in_korea.ingredient.dto.response.CategoryDto;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -16,6 +19,7 @@ import java.util.List;
 public class IngredientController {
 
     private final IngredientService ingredientService;
+    private final ImageUploadService imageUploadService;
 
     // 전체 식재료 조회
     @GetMapping("/api/ingredient")
@@ -49,8 +53,9 @@ public class IngredientController {
 
     // 식재료 추가
     @PostMapping("/api/ingredient")
-    public ResponseEntity<Long> addIngredient(RequestIngredientDto requestIngredientDto) {
-        Long id = ingredientService.addIngredient(requestIngredientDto);
+    public ResponseEntity<Long> addIngredient(CreateIngredientDto ingredientDto) throws IOException {
+        String imageUrl = imageUploadService.uploadImage(ingredientDto.getIngredientImage());
+        Long id = ingredientService.addIngredient(ingredientDto, imageUrl);
         return ResponseEntity.ok(id);
     }
 
