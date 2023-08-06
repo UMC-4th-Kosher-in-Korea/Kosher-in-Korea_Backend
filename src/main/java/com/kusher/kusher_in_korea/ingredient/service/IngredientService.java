@@ -2,6 +2,7 @@ package com.kusher.kusher_in_korea.ingredient.service;
 
 import com.kusher.kusher_in_korea.ingredient.domain.Category;
 import com.kusher.kusher_in_korea.ingredient.domain.Ingredient;
+import com.kusher.kusher_in_korea.ingredient.dto.request.CreateIngredientDto;
 import com.kusher.kusher_in_korea.ingredient.dto.request.RequestIngredientDto;
 import com.kusher.kusher_in_korea.ingredient.dto.response.CategoryDto;
 import com.kusher.kusher_in_korea.ingredient.dto.response.IngredientDto;
@@ -54,10 +55,10 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
      * 아래부터는 서버에서 사용하기 위한 관리용 메서드
      */
     // 식재료 추가
-    public Long addIngredient(RequestIngredientDto requestIngredientDto) {
-        validateDuplicateIngredient(requestIngredientDto.getIngredientName());
-        Category category = categoryRepository.findByName(requestIngredientDto.getIngredientCategory()).orElseThrow(() -> new IllegalStateException("존재하지 않는 카테고리입니다."));
-        Ingredient ingredient = Ingredient.createIngredient(requestIngredientDto.getIngredientName(), requestIngredientDto.getIngredientImage(), requestIngredientDto.getIngredientPrice(), category);
+    public Long addIngredient(CreateIngredientDto ingredientDto, String imageUrl) {
+        validateDuplicateIngredient(ingredientDto.getIngredientName());
+        Category category = categoryRepository.findByName(ingredientDto.getIngredientCategory()).orElseThrow(() -> new IllegalStateException("존재하지 않는 카테고리입니다."));
+        Ingredient ingredient = Ingredient.createIngredient(ingredientDto.getIngredientName(), imageUrl, ingredientDto.getIngredientPrice(), category);
         ingredientRepository.save(ingredient);
         return ingredient.getId();
     }
