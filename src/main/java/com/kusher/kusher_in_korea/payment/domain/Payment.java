@@ -13,7 +13,7 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_id")
-    private Long id; //결제번호
+    private String id; //결제번호
 
     private Long userId; //예약 유저 번호
 

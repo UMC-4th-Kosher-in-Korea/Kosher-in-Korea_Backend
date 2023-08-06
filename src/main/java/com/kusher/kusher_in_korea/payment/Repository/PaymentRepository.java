@@ -1,6 +1,7 @@
 package com.kusher.kusher_in_korea.payment.Repository;
 
 import com.kusher.kusher_in_korea.payment.domain.Payment;
+import com.kusher.kusher_in_korea.payment.dto.PaymentDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,7 +18,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     @Modifying
     @Query(value = insertPayment, nativeQuery = true)
     List<Payment> insertPaymentInfo(
-            @Param("id") Long id,
+            @Param("id") String id,
             @Param("userId") Long userId,
             @Param("payUid") String payUid,
             @Param("payAmount") Integer payAmount,
