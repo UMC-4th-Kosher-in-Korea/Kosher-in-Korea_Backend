@@ -35,12 +35,12 @@ public class Review {
     private LocalDateTime reviewDateTime; // 평가날짜
 
     // 생성 메서드
-    public static Review createReview(User user, Restaurant restaurant, CreateReviewDto createReviewDto) {
+    public static Review createReview(User user, Restaurant restaurant, CreateReviewDto createReviewDto, String imageUrl) {
         Review review = new Review();
         review.setUser(user);
         review.setRestaurant(restaurant);
         review.setRating(createReviewDto.getRating());
-        review.setImage(createReviewDto.getImage());
+        review.setImage(imageUrl);
         review.setContents(createReviewDto.getContents());
         review.setReviewDateTime(LocalDateTime.now());
         return review;
