@@ -26,7 +26,7 @@ public class Review {
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant; // 식당(식당번호)
 
-    private Long rating; // 평점
+    private int rating; // 평점
 
     private String image; // 식당이미지
 

@@ -10,7 +10,6 @@ public class CreateReviewDto { // 평가 생성 요청
     private Long restaurantId; // 식당번호
     private String image; // 식당이미지
     private String contents; // 리뷰내용
-    private String reviewDateTime; // 평가작성일시 -> LocalDateTime으로 변경될 수도 있음
-    private Long rating; // 평점
+    private int rating; // 평점
 
 }
