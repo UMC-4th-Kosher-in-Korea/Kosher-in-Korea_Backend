@@ -1,4 +1,7 @@
 package com.kusher.kusher_in_korea.reviewfeedback.repository;
 
-public interface FeedbackRepository {
+import com.kusher.kusher_in_korea.reviewfeedback.domain.Feedback;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
 }
