@@ -1,6 +1,6 @@
 package com.kusher.kusher_in_korea.payment.dto;
 
-import com.siot.IamportRestClient.response.Payment;
+import com.kusher.kusher_in_korea.payment.domain.Payment;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
