@@ -3,13 +3,11 @@ package com.kusher.kusher_in_korea.reviewfeedback.controller;
 import com.kusher.kusher_in_korea.image.service.ImageUploadService;
 import com.kusher.kusher_in_korea.reviewfeedback.dto.CreateReviewDto;
 import com.kusher.kusher_in_korea.reviewfeedback.service.ReviewService;
+import com.kusher.kusher_in_korea.util.api.ApiResponse;
+import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
 import java.io.IOException;
 
 @RestController
@@ -22,17 +20,17 @@ public class ReviewController {
 
     // 리뷰 생성
     @PostMapping
-    public ResponseEntity<Long> createReview(CreateReviewDto createReviewDto) throws IOException {
+    public ApiResponse<Long> createReview(CreateReviewDto createReviewDto) throws IOException {
         String imageUrl = imageUploadService.uploadImage(createReviewDto.getReviewImage());
         Long reviewId = reviewService.createReview(createReviewDto, imageUrl);
-        return ResponseEntity.ok(reviewId);
+        return ApiResponse.success(reviewId, ResponseCode.REVIEW_CREATE_SUCCESS.getMessage());
     }
 
     // 리뷰 삭제
     @DeleteMapping("/{reviewId}")
-    public ResponseEntity<Void> deleteReview(@PathVariable Long reviewId) {
+    public ApiResponse<Void> deleteReview(@PathVariable Long reviewId) {
         reviewService.deleteReview(reviewId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ApiResponse.success(null, ResponseCode.REVIEW_DELETE_SUCCESS.getMessage());
     }
 }
 
