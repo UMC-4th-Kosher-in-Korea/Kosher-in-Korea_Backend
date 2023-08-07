@@ -59,4 +59,7 @@ public class Reservation {
         this.status = "예약취소";
     }
 
+    public boolean isCancelable() {
+        return this.status.equals("예약완료");
+    }
 }
