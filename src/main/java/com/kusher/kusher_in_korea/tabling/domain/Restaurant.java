@@ -32,7 +32,7 @@ public class Restaurant {
 
     private String restaurantPhone; // 식당전화번호
 
-    private Long capacity; // 최대수용인원
+    private int capacity; // 최대수용인원
 
     private LocalTime openTime; // 오픈시간
 

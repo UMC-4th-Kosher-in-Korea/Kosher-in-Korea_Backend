@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,14 +29,16 @@ public class ReservationService {
     private final UserRepository userRepository;
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
-    // 전체 예약 조회
+    // 전체 예약 조회 (관리자용)
     public List<ReservationDto> findAllReservation() {
         List<Reservation> reservations = reservationRepository.findAll();
-        List<ReservationDto> reservationDtos = new ArrayList<>();
-        for (Reservation reservation : reservations) {
-            reservationDtos.add(new ReservationDto(reservation));
-        }
-        return reservationDtos;
+        return reservations.stream().map(ReservationDto::new).collect(Collectors.toList());
+    }
+
+    // 특정 식당의 예약 조회
+    public List<ReservationDto> findReservationsByRestaurantId(Long restaurantId) {
+        List<Reservation> reservations = reservationRepository.findByRestaurantIdOrderByReservationDateDescReservationTimeDesc(restaurantId);
+        return reservations.stream().map(ReservationDto::new).collect(Collectors.toList());
     }
 
     // 예약 생성
@@ -45,7 +47,7 @@ public class ReservationService {
         Restaurant restaurant = optionalRestaurant.orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         String time = createReservationDto.getReservationTime();
         LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
-        checkAvailableVisitorCount(restaurant, dateTime, createReservationDto.getNumberOfPeople().intValue());
+        checkAvailableVisitorCount(restaurant, dateTime, createReservationDto.getNumberOfPeople());
         Reservation reservation = Reservation.createReservation(createReservationDto);
         reservation.setRestaurant(restaurantRepository.findById(createReservationDto.getRestaurantId()).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND)));
         reservation.setUser(userRepository.findById(createReservationDto.getUserId()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND)));
@@ -60,10 +62,10 @@ public class ReservationService {
         ).orElse(0);
 
         boolean isAvailableVisitorCount = restaurant.isAvailableVisitorCount(totalVisitorCount, numberOfPeople);
-        if(!isAvailableVisitorCount) {
+        if (!isAvailableVisitorCount) {
             throw new ReserveFailException(
                     String.format(
-                            "Resevatoin for restaurant ID %d on %s failed. "
+                            "Reservation for restaurant ID %d on %s failed. "
                                     + "Requested visitor count is %d, but maximum available visitor count is %d",
                             restaurant.getId(),
                             reservationTime,
@@ -80,7 +82,7 @@ public class ReservationService {
         Restaurant restaurant = restaurantRepository.findById(updateReservationDto.getRestaurantId()).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         String time = updateReservationDto.getReservationTime();
         LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
-        checkAvailableVisitorCount(restaurant, dateTime, updateReservationDto.getNumberOfPeople().intValue());
+        checkAvailableVisitorCount(restaurant, dateTime, updateReservationDto.getNumberOfPeople());
         reservation.changeReservation(updateReservationDto.getReservationDate(), updateReservationDto.getReservationTime(), updateReservationDto.getNumberOfPeople());
         reservationRepository.save(reservation);
         return reservation.getId();
@@ -89,6 +91,9 @@ public class ReservationService {
     // 예약 취소(상태 변경)
     public void cancelReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ResponseCode.RESERVATION_NOT_FOUND));
+        if(!reservation.isCancelable()) {
+            throw new IllegalStateException("이미 예약이 취소되었습니다.");
+        }
         reservation.cancelReservation();
         reservationRepository.save(reservation);
     }

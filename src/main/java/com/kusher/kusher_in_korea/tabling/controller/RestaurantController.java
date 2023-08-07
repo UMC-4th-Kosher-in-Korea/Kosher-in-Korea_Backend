@@ -3,15 +3,16 @@ package com.kusher.kusher_in_korea.tabling.controller;
 import com.kusher.kusher_in_korea.reviewfeedback.dto.ReviewDto;
 import com.kusher.kusher_in_korea.reviewfeedback.service.ReviewService;
 import com.kusher.kusher_in_korea.tabling.dto.request.*;
+import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
 import com.kusher.kusher_in_korea.tabling.dto.response.RestaurantDto;
 import com.kusher.kusher_in_korea.tabling.dto.response.RestaurantMenuDto;
+import com.kusher.kusher_in_korea.tabling.service.ReservationService;
 import com.kusher.kusher_in_korea.tabling.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/restaurant")
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class RestaurantController {
     private final RestaurantService restaurantService;
     private final ReviewService reviewService;
+    private final ReservationService reservationService;
 
     // 모든 식당 조회
     @GetMapping
@@ -30,8 +32,8 @@ public class RestaurantController {
     // 특정 식당 조회
     @GetMapping("/{restaurantId}")
     public ResponseEntity<RestaurantDto> getRestaurantById(@PathVariable Long restaurantId) {
-        Optional<RestaurantDto> restaurantDto = restaurantService.findRestaurant(restaurantId);
-        return restaurantDto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        RestaurantDto restaurantDto = restaurantService.findRestaurant(restaurantId);
+        return ResponseEntity.ok(restaurantDto);
     }
 
     // 특정 식당 메뉴 조회
@@ -81,5 +83,12 @@ public class RestaurantController {
     public ResponseEntity<List<ReviewDto>> getReviewsByRestaurantId(@PathVariable Long restaurantId) {
         List<ReviewDto> reviews = reviewService.getReviewsByRestaurantId(restaurantId);
         return ResponseEntity.ok(reviews);
+    }
+
+    // 특정 식당에 대한 예약 조회
+    @GetMapping("/{restaurantId}/reservations")
+    public ResponseEntity<List<ReservationDto>> getReservationsByRestaurantId(@PathVariable Long restaurantId) {
+        List<ReservationDto> reservations = reservationService.findReservationsByRestaurantId(restaurantId);
+        return ResponseEntity.ok(reservations);
     }
 }

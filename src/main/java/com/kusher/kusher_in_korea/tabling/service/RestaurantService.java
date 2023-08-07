@@ -17,10 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,27 +31,19 @@ public class RestaurantService {
     // 전체 커셔 식당 조회
     public List<RestaurantDto> findAllRestaurant() {
         List<Restaurant> restaurants = restaurantRepository.findAll();
-        List<RestaurantDto> restaurantDtos = new ArrayList<>();
-        for (Restaurant restaurant : restaurants) {
-            restaurantDtos.add(new RestaurantDto(restaurant));
-        }
-        return restaurantDtos;
+        return restaurants.stream().map(RestaurantDto::new).collect(Collectors.toList());
     }
 
     // 특정 식당의 정보 조회
-    public Optional<RestaurantDto> findRestaurant(Long restaurantId) {
+    public RestaurantDto findRestaurant(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
-        return Optional.of(new RestaurantDto(restaurant));
+        return new RestaurantDto(restaurant);
     }
 
     // 특정 식당의 메뉴 조회
     public List<RestaurantMenuDto> findRestaurantMenu(Long restaurantId) {
         List<RestaurantMenu> menus = restaurantRepository.getMenus(PageRequest.of(0, 10), restaurantId);
-        List<RestaurantMenuDto> menuDtos = new ArrayList<>();
-        for (RestaurantMenu menu : menus) {
-            menuDtos.add(new RestaurantMenuDto(menu));
-        }
-        return menuDtos;
+        return menus.stream().map(RestaurantMenuDto::new).collect(Collectors.toList());
     }
 
     // 이 아래부터는 커셔 식당 주인만 가능한 기능들이다. 주인의 클라이언트는 일단 미구현 상태이기에, 아래 메서드들은 일단 서버에서 자체적으로 활용한다.
@@ -70,11 +61,7 @@ public class RestaurantService {
             throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
         }
         List<Reservation> reservationList = reservationRepository.findByRestaurantIdOrderByReservationDateDescReservationTimeDesc(restaurantId);
-        List<ReservationDto> reservationDtoList = new ArrayList<>();
-        for (Reservation reservation : reservationList) {
-            reservationDtoList.add(new ReservationDto(reservation));
-        }
-        return reservationDtoList;
+        return reservationList.stream().map(ReservationDto::new).collect(Collectors.toList());
     }
 
     // 새 식당 추가 (점주 타입만 가능)
@@ -110,23 +97,21 @@ public class RestaurantService {
     }
 
     // 특정 식당 메뉴 수정
-    public Long updateRestaurantMenu(Long restaurantId, Long menuId, UpdateRestaurantMenuDto restaurantMenuDto) {
+    public void updateRestaurantMenu(Long restaurantId, Long menuId, UpdateRestaurantMenuDto restaurantMenuDto) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         if (!Objects.equals(restaurantMenuDto.getOwnerId(), restaurant.getOwnerId()))
             throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
         restaurant.updateRestaurantMenu(menuId, restaurantMenuDto);
         restaurantRepository.save(restaurant);
-        return restaurant.getId();
     }
 
     // 특정 식당 메뉴 삭제
-    public Long deleteRestaurantMenu(Long restaurantId, Long menuId, DeleteRestaurantMenuDto deleteRestaurantMenuDto) {
+    public void deleteRestaurantMenu(Long restaurantId, Long menuId, DeleteRestaurantMenuDto deleteRestaurantMenuDto) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         if (!Objects.equals(deleteRestaurantMenuDto.getOwnerId(), restaurant.getOwnerId()))
             throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
         restaurant.deleteRestaurantMenu(menuId);
         restaurantRepository.save(restaurant);
-        return restaurant.getId();
     }
 
 }

@@ -11,7 +11,8 @@ import javax.persistence.*;
 @Table(name = "restaurant_menu")
 public class RestaurantMenu {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "restaurant_menu_id")
     private Long id; // 메뉴번호
 
@@ -21,7 +22,7 @@ public class RestaurantMenu {
 
     private String menuName; // 메뉴이름
 
-    private Long Price; // 메뉴가격
+    private int Price; // 메뉴가격
 
     private String menuDescription; // 메뉴설명
 }

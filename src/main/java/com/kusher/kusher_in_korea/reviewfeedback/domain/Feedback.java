@@ -25,4 +25,12 @@ public class Feedback {
 
     private LocalDateTime feedbackDateTime; // 피드백날짜
 
+    // 생성 메서드
+    public static Feedback createFeedback(User user, String feedback) {
+        Feedback feedback1 = new Feedback();
+        feedback1.setUser(user);
+        feedback1.setFeedback(feedback);
+        feedback1.setFeedbackDateTime(LocalDateTime.now());
+        return feedback1;
+    }
 }

@@ -24,12 +24,12 @@ public class ReviewService {
     private final RestaurantRepository restaurantRepository;
 
     // 리뷰 생성
-    public Long createReview(CreateReviewDto createReviewDto) {
+    public Long createReview(CreateReviewDto createReviewDto, String imageUrl) {
         User user = userRepository.findById(createReviewDto.getUserId())
                 .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         Restaurant restaurant = restaurantRepository.findById(createReviewDto.getRestaurantId())
                 .orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
-        Review review = Review.createReview(user, restaurant, createReviewDto);
+        Review review = Review.createReview(user, restaurant, createReviewDto, imageUrl);
         reviewRepository.save(review);
         return review.getId();
     }
