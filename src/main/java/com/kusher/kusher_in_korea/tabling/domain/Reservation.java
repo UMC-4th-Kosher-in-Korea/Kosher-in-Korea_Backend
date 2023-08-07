@@ -32,7 +32,7 @@ public class Reservation {
 
     private LocalTime reservationTime; // 예약시간
 
-    private Long numberOfPeople; // 예약인원
+    private int numberOfPeople; // 예약인원
 
     private String status; // 예약상태
 
@@ -48,7 +48,7 @@ public class Reservation {
 
     // 비즈니스 로직
     // 예약 변경(날짜, 시간, 인원수)
-    public void changeReservation(String reservationDate, String reservationTime, Long numberOfPeople) {
+    public void changeReservation(String reservationDate, String reservationTime, int numberOfPeople) {
         this.reservationDate = LocalDate.parse(reservationDate);
         this.reservationTime = LocalTime.parse(reservationTime);
         this.numberOfPeople = numberOfPeople;
