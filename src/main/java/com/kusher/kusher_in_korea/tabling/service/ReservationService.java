@@ -91,7 +91,9 @@ public class ReservationService {
     // 예약 취소(상태 변경)
     public void cancelReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ResponseCode.RESERVATION_NOT_FOUND));
-        if(reservation.getStatus().equals("예약취소")) throw new IllegalArgumentException("이미 취소된 예약입니다.");
+        if(!reservation.isCancelable()) {
+            throw new IllegalStateException("이미 예약이 취소되었습니다.");
+        }
         reservation.cancelReservation();
         reservationRepository.save(reservation);
     }
