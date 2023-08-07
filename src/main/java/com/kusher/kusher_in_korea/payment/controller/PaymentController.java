@@ -126,9 +126,9 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
     }
 
     //구매완료창 GET
-    @GetMapping("/succeeded/{uid}")
+    @GetMapping("/succeeded/{payment_id}")
     public String paySucceeded(
-            @PathVariable("uid") String payment_id,
+            @PathVariable("payment_id") String payment_id,
             Model model) throws ControllerException {
         log.trace("paySucceeded() invoked.");
 
