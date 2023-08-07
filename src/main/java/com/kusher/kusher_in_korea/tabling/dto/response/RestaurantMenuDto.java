@@ -13,7 +13,7 @@ public class RestaurantMenuDto {
 
     private String menuName; // 메뉴이름
 
-    private Long price; // 메뉴가격
+    private int price; // 메뉴가격
 
     private String menuDescription; // 메뉴설명
 

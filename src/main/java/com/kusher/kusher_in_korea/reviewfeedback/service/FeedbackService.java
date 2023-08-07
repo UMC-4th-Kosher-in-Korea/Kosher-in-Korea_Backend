@@ -24,13 +24,8 @@ public class FeedbackService {
     public Long createFeedback(CreateFeedbackDto createFeedbackDto) {
         User user = userRepository.findById(createFeedbackDto.getUserId())
                 .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
-
-        Feedback feedback = new Feedback();
-        feedback.setUser(user);
-        feedback.setFeedback(createFeedbackDto.getFeedbackContent());
-        Feedback savedFeedback = feedbackRepository.save(feedback);
-
-        return savedFeedback.getId();
+        Feedback feedback = Feedback.createFeedback(user, createFeedbackDto.getFeedbackContent());
+        return feedbackRepository.save(feedback).getId();
     }
 
     // 모든 피드백 조회

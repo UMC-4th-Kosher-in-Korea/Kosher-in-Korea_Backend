@@ -12,7 +12,7 @@ public class ReservationDto { // 예약 응답
     private Long restaurantId; // 식당(식당번호)
     private String reservationDate; // 예약날짜
     private String reservationTime; // 예약시간
-    private Long numberOfPeople; // 예약인원
+    private int numberOfPeople; // 예약인원
     private String status; // 예약상태
 
     public ReservationDto(Reservation reservation) {
