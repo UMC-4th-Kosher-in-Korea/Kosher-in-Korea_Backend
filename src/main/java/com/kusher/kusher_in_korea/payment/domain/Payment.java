@@ -12,8 +12,11 @@ import javax.persistence.*;
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_number")
+    private Long order_id; //결제 개수
+
     @Column(name = "payment_id")
-    private String id; //결제번호
+    private String id; //결제번호(결제고객코드)
 
     private Long userId; //예약 유저 번호
 
