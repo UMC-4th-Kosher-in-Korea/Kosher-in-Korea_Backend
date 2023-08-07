@@ -16,7 +16,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     //결제정보 저장
     @Modifying
     @Query(value ="INSERT INTO payment (payment_id, user_id, pay_uid, pay_amount, pay_method,pay_card_name) " +
-            "VALUES (:payment_id, :user_name, :pay_uid, :pay_amount, :pay_method, :pay_card_name)", nativeQuery = true)
+            "VALUES (:payment_id, :user_id, :pay_uid, :pay_amount, :pay_method, :pay_card_name)", nativeQuery = true)
     List<Payment> insertPaymentInfo(
             @Param("payment_id") String id,
             @Param("user_id") Long user_id,

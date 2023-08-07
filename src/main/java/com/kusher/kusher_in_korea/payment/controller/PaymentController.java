@@ -49,7 +49,7 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
 
     // 구매 창 GET
     @GetMapping("/payment")
-    public String paymentPage(Long orderId,HttpSession session, Model model) throws Exception {
+    public String paymentPage(Long orderId,HttpSession session, Model model) throws ControllerException {
         log.trace("paymentPage() invoked");
 
         try{
@@ -65,7 +65,7 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
             Objects.requireNonNull(order);
             model.addAttribute("__ORDER__",order);
         } catch (Exception e) {
-            throw new Exception(e);
+            throw new ControllerException(e);
         }
 
         return "/api/pay/payment";
