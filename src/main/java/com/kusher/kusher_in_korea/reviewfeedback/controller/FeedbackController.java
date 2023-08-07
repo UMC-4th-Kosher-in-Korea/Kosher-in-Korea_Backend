@@ -3,8 +3,9 @@ package com.kusher.kusher_in_korea.reviewfeedback.controller;
 import com.kusher.kusher_in_korea.reviewfeedback.domain.Feedback;
 import com.kusher.kusher_in_korea.reviewfeedback.dto.CreateFeedbackDto;
 import com.kusher.kusher_in_korea.reviewfeedback.service.FeedbackService;
+import com.kusher.kusher_in_korea.util.api.ApiResponse;
+import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,15 +18,15 @@ public class FeedbackController {
     private final FeedbackService feedbackService;
 
     @PostMapping
-    public ResponseEntity<Long> createFeedback(@RequestBody CreateFeedbackDto createFeedbackDto) {
+    public ApiResponse<Long> createFeedback(@RequestBody CreateFeedbackDto createFeedbackDto) {
         Long feedbackId = feedbackService.createFeedback(createFeedbackDto);
-        return ResponseEntity.ok(feedbackId);
+        return ApiResponse.success(feedbackId, ResponseCode.FEEDBACK_CREATE_SUCCESS.getMessage());
     }
 
     @GetMapping
-    public ResponseEntity<List<Feedback>> getAllFeedbacks() {
+    public ApiResponse<List<Feedback>> getAllFeedbacks() {
         List<Feedback> feedbacks = feedbackService.getAllFeedbacks();
-        return ResponseEntity.ok(feedbacks);
+        return ApiResponse.success(feedbacks, ResponseCode.FEEDBACK_READ_SUCCESS.getMessage());
     }
 
 }
