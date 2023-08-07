@@ -41,15 +41,48 @@ public enum ResponseCode {
     LOGIN_SUCCESS(HttpStatus.OK, true, "Login Success"),
     USER_READ_SUCCESS(HttpStatus.OK, true, "User Read Success"),
     RESTAURANT_READ_SUCCESS(HttpStatus.OK, true, "Restaurant Read Success"),
+    INGREDIENT_READ_SUCCESS(HttpStatus.OK, true, "Ingredient Read Success"),
+    CATEGORY_READ_SUCCESS(HttpStatus.OK, true, "Category Read Success"),
+    RESTAURANT_MENU_READ_SUCCESS(HttpStatus.OK, true, "Restaurant Menu Read Success"),
     RESERVATION_READ_SUCCESS(HttpStatus.OK, true, "Reservation Read Success"),
+    REVIEW_READ_SUCCESS(HttpStatus.OK, true, "Review Read Success"),
+    ORDERS_READ_SUCCESS(HttpStatus.OK, true, "Orders Read Success"),
+    CART_READ_SUCCESS(HttpStatus.OK, true, "Cart Read Success"),
+    FEEDBACK_READ_SUCCESS(HttpStatus.OK, true, "Feedback Read Success"),
+
+    USER_UPDATE_SUCCESS(HttpStatus.OK, true, "User Update Success"),
+    RESTAURANT_UPDATE_SUCCESS(HttpStatus.OK, true, "Restaurant Update Success"),
+    RESERVATION_UPDATE_SUCCESS(HttpStatus.OK, true, "Reservation Update Success"),
+    REVIEW_UPDATE_SUCCESS(HttpStatus.OK, true, "Review Update Success"),
+    ORDERS_UPDATE_SUCCESS(HttpStatus.OK, true, "Orders Update Success"),
+    CART_UPDATE_SUCCESS(HttpStatus.OK, true, "Cart Update Success"),
+    RESTAURANT_MENU_UPDATE_SUCCESS(HttpStatus.OK, true, "Restaurant Menu Update Success"),
+    CART_INGREDIENT_UPDATE_SUCCESS(HttpStatus.OK, true, "Cart Ingredient Update Success"),
+    INGREDIENT_UPDATE_SUCCESS(HttpStatus.OK, true, "Ingredient Update Success"),
+    CATEGORY_UPDATE_SUCCESS(HttpStatus.OK, true, "Category Update Success"),
+
+    RESERVATION_CANCEL_SUCCESS(HttpStatus.OK, true, "Reservation Cancel Success"),
+    ORDERS_CANCEL_SUCCESS(HttpStatus.OK, true, "Orders Cancel Success"),
+    REVIEW_DELETE_SUCCESS(HttpStatus.OK, true, "Review Delete Success"),
+    RESTAURANT_MENU_DELETE_SUCCESS(HttpStatus.OK, true, "Restaurant Menu Delete Success"),
+    CART_INGREDIENT_DELETE_SUCCESS(HttpStatus.OK, true, "Cart Ingredient Delete Success"),
+    INGREDIENT_DELETE_SUCCESS(HttpStatus.OK, true, "Ingredient Delete Success"),
+    CATEGORY_DELETE_SUCCESS(HttpStatus.OK, true, "Category Delete Success"),
 
     /**
      *  201 Created
      */
-    SIGNUP_SUCCESS(HttpStatus.CREATED, true, "회원가입 성공"),
+    SIGNUP_SUCCESS(HttpStatus.CREATED, true, "Signup Success"),
     USER_CREATE_SUCCESS(HttpStatus.CREATED, true, "User Create Success"),
     RESTAURANT_CREATE_SUCCESS(HttpStatus.CREATED, true, "Restaurant Create Success"),
+    RESTAURANT_MENU_CREATE_SUCCESS(HttpStatus.CREATED, true, "Restaurant Menu Create Success"),
     RESERVATION_CREATE_SUCCESS(HttpStatus.CREATED, true, "Reservation Create Success"),
+    REVIEW_CREATE_SUCCESS(HttpStatus.CREATED, true, "Review Create Success"),
+    FEEDBACK_CREATE_SUCCESS(HttpStatus.CREATED, true, "Feedback Create Success"),
+    ORDERS_CREATE_SUCCESS(HttpStatus.CREATED, true, "Orders Create Success"),
+    CART_INGREDIENT_CREATE_SUCCESS(HttpStatus.CREATED, true, "Cart Ingredient Create Success"),
+    INGREDIENT_CREATE_SUCCESS(HttpStatus.CREATED, true, "Ingredient Create Success"),
+    CATEGORY_CREATE_SUCCESS(HttpStatus.CREATED, true, "Category Create Success"),
 
     /**
      * 204 No Content
