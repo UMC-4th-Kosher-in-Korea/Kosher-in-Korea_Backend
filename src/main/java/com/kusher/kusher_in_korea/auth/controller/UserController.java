@@ -8,8 +8,9 @@ import com.kusher.kusher_in_korea.reviewfeedback.service.ReviewService;
 import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
 import com.kusher.kusher_in_korea.auth.dto.UserDto;
 import com.kusher.kusher_in_korea.auth.service.UserService;
+import com.kusher.kusher_in_korea.util.api.ApiResponse;
+import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,51 +26,51 @@ public class UserController {
 
     // 유저 추가
     @PostMapping
-    public ResponseEntity<Long> createUser(@RequestBody UserDto userDto) {
+    public ApiResponse<Long> createUser(@RequestBody UserDto userDto) {
         Long userId = userService.createUser(userDto);
-        return ResponseEntity.ok(userId);
+        return ApiResponse.success(userId, ResponseCode.USER_CREATE_SUCCESS.getMessage());
     }
 
     // 유저 정보 조회
     @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long userId) {
+    public ApiResponse<UserDto> getUser(@PathVariable Long userId) {
         UserDto userDto = userService.getUser(userId);
-        return ResponseEntity.ok(userDto);
+        return ApiResponse.success(userDto, ResponseCode.USER_READ_SUCCESS.getMessage());
     }
 
     // 유저 정보 수정
     @PutMapping("/{userId}")
-    public ResponseEntity<Long> updateUser(@PathVariable Long userId, @RequestBody UserDto userDto) {
+    public ApiResponse<Long> updateUser(@PathVariable Long userId, @RequestBody UserDto userDto) {
         Long updatedUserId = userService.updateUser(userId, userDto);
-        return ResponseEntity.ok(updatedUserId);
+        return ApiResponse.success(updatedUserId, ResponseCode.USER_UPDATE_SUCCESS.getMessage());
     }
 
     // 유저의 예약 조회
     @GetMapping("/{userId}/reservations")
-    public ResponseEntity<List<ReservationDto>> getUserReservations(@PathVariable Long userId) {
+    public ApiResponse<List<ReservationDto>> getUserReservations(@PathVariable Long userId) {
         List<ReservationDto> reservationDtos = userService.getUserReservation(userId);
-        return ResponseEntity.ok(reservationDtos);
+        return ApiResponse.success(reservationDtos, ResponseCode.RESERVATION_READ_SUCCESS.getMessage());
     }
 
     // 유저의 주문 조회
     @GetMapping("/{userId}/orders")
-    public ResponseEntity<List<OrdersDto>> getUserOrders(@PathVariable Long userId) {
+    public ApiResponse<List<OrdersDto>> getUserOrders(@PathVariable Long userId) {
         List<OrdersDto> ordersDtos = ordersService.getUserOrders(userId);
-        return ResponseEntity.ok(ordersDtos);
+        return ApiResponse.success(ordersDtos, ResponseCode.ORDERS_READ_SUCCESS.getMessage());
     }
 
     // 유저가 남긴 리뷰 조회
     @GetMapping("{userId}/review")
-    public ResponseEntity<List<ReviewDto>> getReviewsByUserId(@PathVariable Long userId) {
+    public ApiResponse<List<ReviewDto>> getReviewsByUserId(@PathVariable Long userId) {
         List<ReviewDto> reviews = reviewService.getReviewsByUserId(userId);
-        return ResponseEntity.ok(reviews);
+        return ApiResponse.success(reviews, ResponseCode.REVIEW_READ_SUCCESS.getMessage());
     }
 
     // 유저의 장바구니 조회
     @GetMapping("/{userId}/cart")
-    public ResponseEntity<CartDto> getUserCart(@PathVariable Long userId) {
+    public ApiResponse<CartDto> getUserCart(@PathVariable Long userId) {
         CartDto ordersDtos = userService.getUserCart(userId);
-        return ResponseEntity.ok(ordersDtos);
+        return ApiResponse.success(ordersDtos, ResponseCode.CART_READ_SUCCESS.getMessage());
     }
 
 }
