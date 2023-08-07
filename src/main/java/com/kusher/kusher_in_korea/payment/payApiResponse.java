@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class APIResponse {
+public class payApiResponse {
 
 
     @ApiModelProperty(example = "상태코드")
@@ -24,11 +24,11 @@ public class APIResponse {
     private Map<String, Object> data;
 
 
-    public APIResponse() {
+    public payApiResponse() {
         this(HttpStatus.OK);
     } // constructor
 
-    public APIResponse(HttpStatus httpStatus) {
+    public payApiResponse(HttpStatus httpStatus) {
 
         this.status = httpStatus.value();
         this.message = httpStatus.getReasonPhrase();

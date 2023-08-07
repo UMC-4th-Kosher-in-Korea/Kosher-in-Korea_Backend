@@ -3,7 +3,7 @@ package com.kusher.kusher_in_korea.payment.controller;
 import com.kusher.kusher_in_korea.auth.domain.User;
 import com.kusher.kusher_in_korea.ingredient.dto.response.OrdersDto;
 import com.kusher.kusher_in_korea.ingredient.service.OrdersService;
-import com.kusher.kusher_in_korea.payment.APIResponse;
+import com.kusher.kusher_in_korea.payment.payApiResponse;
 import com.kusher.kusher_in_korea.payment.service.PaymentService;
 import com.kusher.kusher_in_korea.util.exception.ControllerException;
 import com.kusher.kusher_in_korea.util.exception.ServiceException;
@@ -74,13 +74,13 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
     //결제 검증
     @ResponseBody
     @PostMapping("/verify/{imp_uid}")
-    public APIResponse paymentByImpUid(
+    public payApiResponse paymentByImpUid(
             @PathVariable(value = "imp_uid") String imp_uid,
             String orderId,
             Long userId) throws IamportResponseException, IOException, ControllerException {
         log.trace("paymentByImpUid({},{},{}) invoked.",imp_uid,orderId,userId);
 
-        APIResponse response = new APIResponse();
+        payApiResponse response = new payApiResponse();
         String result = "";
         Payment payment = this.api.paymentByImpUid(imp_uid).getResponse(); //검증처리
 
