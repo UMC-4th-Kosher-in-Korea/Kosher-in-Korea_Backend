@@ -15,7 +15,7 @@ import java.util.List;
 public class ReservationController {
     private final ReservationService reservationService;
 
-    // 전체 예약 조회
+    // 전체 예약 조회 (관리자용)
     @GetMapping
     public ResponseEntity<List<ReservationDto>> findAllReservations() {
         List<ReservationDto> allReservations = reservationService.findAllReservation();
@@ -25,8 +25,7 @@ public class ReservationController {
     // 예약 생성
     @PostMapping
     public Long createReservations(@RequestBody CreateReservationDto createReservationDto) {
-        Long reservationId = reservationService.createReservation(createReservationDto);
-        return reservationId;
+        return reservationService.createReservation(createReservationDto);
     }
 
     // 예약 수정
