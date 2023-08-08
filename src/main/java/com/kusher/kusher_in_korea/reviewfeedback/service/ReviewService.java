@@ -29,6 +29,12 @@ public class ReviewService {
                 .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         Restaurant restaurant = restaurantRepository.findById(createReviewDto.getRestaurantId())
                 .orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
+
+        // 이미 리뷰를 남겼는지 확인
+        List<Review> reviews = reviewRepository.findByUserIdAndRestaurantId(user.getId(), restaurant.getId());
+        if (!reviews.isEmpty()) {
+            throw new CustomException(ResponseCode.ALREADY_REVIEWED);
+        }
         Review review = Review.createReview(user, restaurant, createReviewDto, imageUrl);
         reviewRepository.save(review);
         return review.getId();
@@ -43,7 +49,7 @@ public class ReviewService {
                 .collect(Collectors.toList());
     }
 
-    // 특정 유저가 남긴 평가 조회
+    // 특정 유저가 남긴 리뷰 조회
     public List<ReviewDto> getReviewsByUserId(Long userId) {
         List<Review> reviews = reviewRepository.findByUserId(userId);
 

@@ -2,14 +2,12 @@ package com.kusher.kusher_in_korea.reviewfeedback.domain;
 
 import com.kusher.kusher_in_korea.auth.domain.User;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "feedback")
 public class Feedback {
 
@@ -28,9 +26,9 @@ public class Feedback {
     // 생성 메서드
     public static Feedback createFeedback(User user, String feedback) {
         Feedback feedback1 = new Feedback();
-        feedback1.setUser(user);
-        feedback1.setFeedback(feedback);
-        feedback1.setFeedbackDateTime(LocalDateTime.now());
+        feedback1.user = user;
+        feedback1.feedback = feedback;
+        feedback1.feedbackDateTime = LocalDateTime.now();
         return feedback1;
     }
 }
