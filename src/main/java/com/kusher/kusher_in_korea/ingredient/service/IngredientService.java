@@ -8,6 +8,8 @@ import com.kusher.kusher_in_korea.ingredient.dto.response.CategoryDto;
 import com.kusher.kusher_in_korea.ingredient.dto.response.IngredientDto;
 import com.kusher.kusher_in_korea.ingredient.repository.CategoryRepository;
 import com.kusher.kusher_in_korea.ingredient.repository.IngredientRepository;
+import com.kusher.kusher_in_korea.util.exception.CustomException;
+import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,13 +31,13 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
             Page<Ingredient> ingredients = ingredientRepository.findAll(pageable);
             return ingredients.map(IngredientDto::new);
         } catch (Exception e) {
-            throw new IllegalStateException("식재료 조회 중 오류가 발생했습니다.");
+            throw new CustomException(ResponseCode.INGREDIENT_NOT_FOUND);
         }
     }
 
     // 클라이언트가 클릭했을 때를 대비한 특정 식재료 조회
     public IngredientDto findIngredient(Long ingredientId) {
-        return new IngredientDto(ingredientRepository.findById(ingredientId).orElseThrow(() -> new IllegalStateException("존재하지 않는 식재료입니다.")));
+        return new IngredientDto(ingredientRepository.findById(ingredientId).orElseThrow(() -> new CustomException(ResponseCode.INGREDIENT_NOT_FOUND)));
     }
 
     // 전체 카테고리 조회
@@ -48,7 +50,7 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
 
     // 특정 카테고리에 속한 식재료 조회
     public List<IngredientDto> findIngredientsByCategory(String categoryName) {
-        Category category = categoryRepository.findByName(categoryName).orElseThrow(() -> new IllegalStateException("존재하지 않는 카테고리입니다."));
+        Category category = categoryRepository.findByName(categoryName).orElseThrow(() -> new CustomException(ResponseCode.CATEGORY_NOT_FOUND));
         List<Ingredient> ingredients = ingredientRepository.findByCategoryId(category.getId());
         return ingredients.stream()
                 .map(IngredientDto::new)
@@ -61,7 +63,7 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
     // 식재료 추가
     public Long addIngredient(CreateIngredientDto ingredientDto, String imageUrl) {
         validateDuplicateIngredient(ingredientDto.getIngredientName());
-        Category category = categoryRepository.findByName(ingredientDto.getIngredientCategory()).orElseThrow(() -> new IllegalStateException("존재하지 않는 카테고리입니다."));
+        Category category = categoryRepository.findByName(ingredientDto.getIngredientCategory()).orElseThrow(() -> new CustomException(ResponseCode.CATEGORY_NOT_FOUND));
         Ingredient ingredient = Ingredient.createIngredient(ingredientDto.getIngredientName(), imageUrl, ingredientDto.getIngredientPrice(), category);
         ingredientRepository.save(ingredient);
         return ingredient.getId();
@@ -76,8 +78,8 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
 
     // 식재료 수정
     public Long updateIngredient(Long ingredientId, RequestIngredientDto requestIngredientDto) {
-        Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow(() -> new IllegalStateException("존재하지 않는 식재료입니다."));
-        Category category = categoryRepository.findByName(requestIngredientDto.getIngredientCategory()).orElseThrow(() -> new IllegalStateException("존재하지 않는 카테고리입니다."));
+        Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow(() -> new CustomException(ResponseCode.INGREDIENT_NOT_FOUND));
+        Category category = categoryRepository.findByName(requestIngredientDto.getIngredientCategory()).orElseThrow(() -> new CustomException(ResponseCode.CATEGORY_NOT_FOUND));
         ingredient.updateIngredient(requestIngredientDto.getIngredientName(), requestIngredientDto.getIngredientPrice(), category);
         return ingredient.getId();
     }
@@ -98,13 +100,13 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
     // 중복 카테고리 감지
     private void validateDuplicateCategory(String name) {
         categoryRepository.findByName(name).ifPresent(m -> {
-            throw new IllegalStateException("이미 존재하는 카테고리입니다.");
+            throw new CustomException(ResponseCode.CATEGORY_NOT_FOUND);
         });
     }
 
     // 카테고리 수정
     public Long updateCategory(Long categoryId, String categoryName) {
-        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalStateException("존재하지 않는 카테고리입니다."));
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new CustomException(ResponseCode.CATEGORY_NOT_FOUND));
         category.setName(categoryName);
         return category.getId();
     }
