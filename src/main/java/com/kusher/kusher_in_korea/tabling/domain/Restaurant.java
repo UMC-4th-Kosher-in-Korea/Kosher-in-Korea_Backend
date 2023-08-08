@@ -4,19 +4,19 @@ import com.kusher.kusher_in_korea.tabling.dto.request.CreateRestaurantDto;
 import com.kusher.kusher_in_korea.tabling.dto.request.CreateRestaurantMenuDto;
 import com.kusher.kusher_in_korea.tabling.dto.request.UpdateRestaurantDto;
 import com.kusher.kusher_in_korea.tabling.dto.request.UpdateRestaurantMenuDto;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "restaurant")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Restaurant {
 
     @Id
@@ -46,38 +46,33 @@ public class Restaurant {
     // 생성 메서드
     public static Restaurant createRestaurant(CreateRestaurantDto createRestaurantDto) {
         Restaurant restaurant = new Restaurant();
-        restaurant.setOwnerId(createRestaurantDto.getUserId());
-        restaurant.setLocation(createRestaurantDto.getLocation());
-        restaurant.setRestaurantName(createRestaurantDto.getRestaurantName());
-        restaurant.setRestaurantPhone(createRestaurantDto.getRestaurantPhone());
-        restaurant.setCapacity(createRestaurantDto.getCapacity());
-        restaurant.setOpenTime(createRestaurantDto.getOpenTime());
-        restaurant.setCloseTime(createRestaurantDto.getCloseTime());
-        restaurant.setDescription(createRestaurantDto.getDescription());
+        restaurant.ownerId = createRestaurantDto.getUserId();
+        restaurant.location = createRestaurantDto.getLocation();
+        restaurant.restaurantName = createRestaurantDto.getRestaurantName();
+        restaurant.restaurantPhone = createRestaurantDto.getRestaurantPhone();
+        restaurant.capacity = createRestaurantDto.getCapacity();
+        restaurant.openTime = createRestaurantDto.getOpenTime();
+        restaurant.closeTime = createRestaurantDto.getCloseTime();
+        restaurant.description = createRestaurantDto.getDescription();
         return restaurant;
     }
 
     // 비즈니스 로직
     // 식당정보 수정
     public void updateRestaurant(UpdateRestaurantDto updateRestaurantDto) {
-        this.setId(updateRestaurantDto.getId());
-        this.setOwnerId(updateRestaurantDto.getUserId());
-        this.setLocation(updateRestaurantDto.getLocation());
-        this.setRestaurantName(updateRestaurantDto.getRestaurantName());
-        this.setRestaurantPhone(updateRestaurantDto.getRestaurantPhone());
-        this.setCapacity(updateRestaurantDto.getCapacity());
-        this.setOpenTime(updateRestaurantDto.getOpenTime());
-        this.setCloseTime(updateRestaurantDto.getCloseTime());
-        this.setDescription(updateRestaurantDto.getDescription());
+        this.ownerId = updateRestaurantDto.getUserId();
+        this.location = updateRestaurantDto.getLocation();
+        this.restaurantName = updateRestaurantDto.getRestaurantName();
+        this.restaurantPhone = updateRestaurantDto.getRestaurantPhone();
+        this.capacity = updateRestaurantDto.getCapacity();
+        this.openTime = updateRestaurantDto.getOpenTime();
+        this.closeTime = updateRestaurantDto.getCloseTime();
+        this.description = updateRestaurantDto.getDescription();
     }
 
     // 식당에 메뉴 추가
     public void addRestaurantMenu(CreateRestaurantMenuDto restaurantMenu) {
-        RestaurantMenu newMenu = new RestaurantMenu();
-        newMenu.setMenuName(restaurantMenu.getMenuName());
-        newMenu.setPrice(restaurantMenu.getPrice());
-        newMenu.setMenuDescription(restaurantMenu.getMenuDescription());
-        newMenu.setRestaurant(this);
+        RestaurantMenu newMenu = RestaurantMenu.createRestaurantMenu(restaurantMenu.getMenuName(), restaurantMenu.getPrice(), restaurantMenu.getMenuDescription());
         this.getRestaurantMenus().add(newMenu);
     }
 
@@ -85,9 +80,8 @@ public class Restaurant {
     public void updateRestaurantMenu(Long menuId, UpdateRestaurantMenuDto restaurantMenu) {
         for (RestaurantMenu menu : this.getRestaurantMenus()) {
             if (menu.getId().equals(menuId)) {
-                menu.setMenuName(restaurantMenu.getMenuName());
-                menu.setPrice(restaurantMenu.getPrice());
-                menu.setMenuDescription(restaurantMenu.getDescription());
+                menu.updateRestaurantMenu(restaurantMenu.getMenuName(), restaurantMenu.getPrice(), restaurantMenu.getDescription());
+                break;
             }
         }
     }

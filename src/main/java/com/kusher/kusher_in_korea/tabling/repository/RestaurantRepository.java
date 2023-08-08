@@ -13,9 +13,6 @@ import java.util.List;
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
-    //식당명 존재 여부 확인
-    boolean existsRestaurantByRestaurantName(String restaurantName);
-    
     //식당메뉴
     @Query("select m "
             + "from Restaurant r "

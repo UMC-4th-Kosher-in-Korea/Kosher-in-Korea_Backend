@@ -4,14 +4,12 @@ import com.kusher.kusher_in_korea.auth.domain.User;
 import com.kusher.kusher_in_korea.reviewfeedback.dto.CreateReviewDto;
 import com.kusher.kusher_in_korea.tabling.domain.Restaurant;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "review")
 public class Review {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,12 +35,12 @@ public class Review {
     // 생성 메서드
     public static Review createReview(User user, Restaurant restaurant, CreateReviewDto createReviewDto, String imageUrl) {
         Review review = new Review();
-        review.setUser(user);
-        review.setRestaurant(restaurant);
-        review.setRating(createReviewDto.getRating());
-        review.setImage(imageUrl);
-        review.setContents(createReviewDto.getContents());
-        review.setReviewDateTime(LocalDateTime.now());
+        review.user = user;
+        review.restaurant = restaurant;
+        review.rating = createReviewDto.getRating();
+        review.contents = createReviewDto.getContents();
+        review.image = imageUrl;
+        review.reviewDateTime = LocalDateTime.now();
         return review;
     }
 

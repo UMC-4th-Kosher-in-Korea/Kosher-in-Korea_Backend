@@ -1,14 +1,11 @@
 package com.kusher.kusher_in_korea.tabling.service;
 
-import com.kusher.kusher_in_korea.tabling.domain.Reservation;
 import com.kusher.kusher_in_korea.tabling.domain.Restaurant;
 import com.kusher.kusher_in_korea.tabling.domain.RestaurantMenu;
 import com.kusher.kusher_in_korea.auth.domain.User;
 import com.kusher.kusher_in_korea.tabling.dto.request.*;
-import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
 import com.kusher.kusher_in_korea.tabling.dto.response.RestaurantDto;
 import com.kusher.kusher_in_korea.tabling.dto.response.RestaurantMenuDto;
-import com.kusher.kusher_in_korea.tabling.repository.ReservationRepository;
 import com.kusher.kusher_in_korea.tabling.repository.RestaurantRepository;
 import com.kusher.kusher_in_korea.auth.repository.UserRepository;
 import com.kusher.kusher_in_korea.util.exception.CustomException;
@@ -24,8 +21,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RestaurantService {
+
     private final RestaurantRepository restaurantRepository;
-    private final ReservationRepository reservationRepository;
     private final UserRepository userRepository;
 
     // 전체 커셔 식당 조회
@@ -50,18 +47,9 @@ public class RestaurantService {
 
     // 요청한 유저가 식당 주인인지 확인
     public boolean isOwner(Long restaurantId, Long ownerId) {
-        Long id = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND)).getOwnerId();
-        return (id.equals(ownerId));
-    }
-
-    // 특정 식당의 예약 내역 조회 (오래된 예약이 뒤에 나오도록 정렬)
-    private List<ReservationDto> getReservationList(Long restaurantId, RequestReservationListDto requestReservationListDto) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
-        if (!isOwner(restaurant.getOwnerId(), requestReservationListDto.getUserId())) {
-            throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
-        }
-        List<Reservation> reservationList = reservationRepository.findByRestaurantIdOrderByReservationDateDescReservationTimeDesc(restaurantId);
-        return reservationList.stream().map(ReservationDto::new).collect(Collectors.toList());
+        Long id = restaurant.getOwnerId();
+        return (id.equals(ownerId));
     }
 
     // 새 식당 추가 (점주 타입만 가능)

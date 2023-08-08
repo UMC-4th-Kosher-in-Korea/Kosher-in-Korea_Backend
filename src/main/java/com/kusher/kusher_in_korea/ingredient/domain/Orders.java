@@ -3,8 +3,9 @@ package com.kusher.kusher_in_korea.ingredient.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kusher.kusher_in_korea.auth.domain.User;
+import com.kusher.kusher_in_korea.util.exception.CustomException;
+import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Table(name = "orders")
 public class Orders { // 주문은 유저와 일대다 관계
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,22 +34,30 @@ public class Orders { // 주문은 유저와 일대다 관계
     @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
     private List<OrdersIngredient> ordersIngredientList = new ArrayList<>(); // 주문과 주문상품은 일대다 관계
 
-    public void update(Orders orders) {
-        this.delivery = orders.getDelivery();
+    public void update(Delivery delivery) {
+        this.delivery = delivery;
     }
 
-    // 배송지 설정
-    public void setDelivery(Delivery delivery) {
-        this.delivery = delivery;
-        delivery.setOrders(this);
+    // 생성 메서드
+    public static Orders createOrders(User user, OrderStatus status, Delivery delivery) {
+        Orders orders = new Orders();
+        orders.user = user;
+        orders.status = status;
+        orders.orderDateTime = LocalDateTime.now();
+        orders.delivery = delivery;
+        return orders;
+    }
+
+    public void setOrdersIngredientList(List<OrdersIngredient> ordersIngredientList) {
+        this.ordersIngredientList = ordersIngredientList;
     }
 
     // 주문 취소
     public void cancel() {
         if (delivery.getStatus() == DeliveryStatus.COMP) {
-            throw new IllegalStateException("이미 배송이 완료된 상품은 취소가 불가능합니다.");
+            throw new CustomException(ResponseCode.ALREADY_DELIVERED);
         }
-        this.setStatus(OrderStatus.CANCEL);
+        this.status = OrderStatus.CANCEL;
     }
 
     // 주문 전체 가격

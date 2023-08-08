@@ -10,6 +10,8 @@ import com.kusher.kusher_in_korea.ingredient.service.IngredientService;
 import com.kusher.kusher_in_korea.util.api.ApiResponse;
 import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -24,8 +26,8 @@ public class IngredientController {
 
     // 전체 식재료 조회 (페이징 필요)
     @GetMapping("/api/ingredient")
-    public ApiResponse<List<IngredientDto>> findAllIngredients() {
-        List<IngredientDto> ingredients = ingredientService.findAllIngredients();
+    public ApiResponse<Page<IngredientDto>> findAllIngredients(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        Page<IngredientDto> ingredients = ingredientService.findAllIngredients(PageRequest.of(page, size));
         return ApiResponse.success(ingredients, ResponseCode.INGREDIENT_READ_SUCCESS.getMessage());
     }
 
@@ -70,8 +72,8 @@ public class IngredientController {
     // 식재료 삭제
     @DeleteMapping("/api/ingredient/{ingredientId}")
     public ApiResponse<Void> deleteIngredient(@PathVariable("ingredientId") Long ingredientId) {
-       ingredientService.deleteIngredient(ingredientId);
-         return ApiResponse.success(null, ResponseCode.INGREDIENT_DELETE_SUCCESS.getMessage());
+        ingredientService.deleteIngredient(ingredientId);
+        return ApiResponse.success(null, ResponseCode.INGREDIENT_DELETE_SUCCESS.getMessage());
     }
 
     // 카테고리 추가

@@ -10,6 +10,7 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter
+@Table(name = "delivery")
 public class Delivery {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

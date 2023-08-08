@@ -14,6 +14,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     // 특정 유저가 남긴 평가 조회
     List<Review> findByUserId(Long userId);
 
+    // 특정 유저가 이미 특정 식당에 평가를 남겼는지 확인
+    List<Review> findByUserIdAndRestaurantId(Long userId, Long restaurantId);
+
     // 평가 삭제
     void deleteById(Long reviewId);
 }
