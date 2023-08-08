@@ -22,7 +22,7 @@ public enum ResponseCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, false,"User Not Found"),
     RESTAURANT_NOT_FOUND(HttpStatus.NOT_FOUND, false,"Restaurant Not Found"),
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, false,"Reservation Not Found"),
-
+    PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, false,"Payment Not Found"),
     /**
      * 409 CONFLICT
      */
