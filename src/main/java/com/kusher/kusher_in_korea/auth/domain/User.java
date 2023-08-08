@@ -2,15 +2,16 @@ package com.kusher.kusher_in_korea.auth.domain;
 
 import com.kusher.kusher_in_korea.auth.dto.UserDto;
 import com.kusher.kusher_in_korea.ingredient.domain.Cart;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "user")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +31,14 @@ public class User {
     // 생성 메서드
     public static User createUser(UserDto userDto) {
         User user = new User();
-        user.setUserName(userDto.getUserName());
-        user.setUserPhone(userDto.getUserPhone());
-        user.setUserType(userDto.getUserType());
+        user.userName = userDto.getUserName();
+        user.userPhone = userDto.getUserPhone();
+        user.userType = userDto.getUserType();
         return user;
+    }
+
+    public void setCart(Cart cart) {
+        this.cart = cart;
     }
 
     // 비즈니스 로직
