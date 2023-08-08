@@ -15,6 +15,8 @@ public enum ResponseCode {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, false, "Bad Request"),
     USER_LOGIN_FAILED(HttpStatus.BAD_REQUEST, false,"Login Failed"),
     NOT_RESTAURANT_OWNER(HttpStatus.BAD_REQUEST, false,"Not Restaurant Owner"),
+    ALREADY_REVIEWED(HttpStatus.BAD_REQUEST, false,"Already Reviewed"),
+    ALREADY_DELIVERED(HttpStatus.BAD_REQUEST, false,"Already Delivered"),
 
     /**
      * 404 NOT FOUND

@@ -1,13 +1,15 @@
 package com.kusher.kusher_in_korea.ingredient.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
-@Getter @Setter
+@Getter
 @Table(name = "cart_ingredient")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CartIngredient { // 장바구니와 식재료의 다대다 관계로 인한 중간 테이블
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cart_ingredient_id")
@@ -22,6 +24,17 @@ public class CartIngredient { // 장바구니와 식재료의 다대다 관계�
     private Cart cart; // 장바구니
 
     private int count; // 장바구니에 담은 식재료 수량
+
+    // 생성 메서드
+    public static CartIngredient createCartIngredient(Cart cart, int count, Ingredient ingredient) {
+        return new CartIngredient(ingredient, cart, count);
+    }
+
+    protected CartIngredient(Ingredient ingredient, Cart cart, int count) {
+        this.ingredient = ingredient;
+        this.cart = cart;
+        this.count = count;
+    }
 
     public int getTotalPrice() {
         return ingredient.getPrice() * getCount();

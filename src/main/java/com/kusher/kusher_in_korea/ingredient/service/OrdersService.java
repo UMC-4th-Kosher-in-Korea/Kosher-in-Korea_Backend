@@ -15,7 +15,6 @@ import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,10 +39,7 @@ public class OrdersService {
     // 장바구니 내부에 특정 상품 추가 (장바구니 담기)
     public Long addCartIngredient(AddCartIngredientDto addCartIngredientDto) {
         Cart cart = cartRepository.findById(addCartIngredientDto.getCartId()).orElseThrow(() -> new CustomException(ResponseCode.CART_NOT_FOUND));
-        CartIngredient cartIngredient = new CartIngredient();
-        cartIngredient.setCart(cart);
-        cartIngredient.setCount(addCartIngredientDto.getCount());
-        cartIngredient.setIngredient(ingredientRepository.findById(addCartIngredientDto.getIngredientId()).orElseThrow(() -> new CustomException(ResponseCode.INGREDIENT_NOT_FOUND)));
+        CartIngredient cartIngredient = CartIngredient.createCartIngredient(cart, addCartIngredientDto.getCount(), ingredientRepository.findById(addCartIngredientDto.getIngredientId()).orElseThrow(() -> new CustomException(ResponseCode.INGREDIENT_NOT_FOUND)));
         return cartIngredientRepository.save(cartIngredient).getId();
     }
 
@@ -75,10 +71,7 @@ public class OrdersService {
         // 장바구니_상품_리스트 -> 주문_상품_리스트로 전환
         List<OrdersIngredient> ordersIngredients = createOrdersDto.getCartIngredients().stream().map(cartIngredientDto -> {
             CartIngredient cartIngredient = cartIngredientRepository.findById(cartIngredientDto.getCartIngredientId()).orElseThrow(() -> new CustomException(ResponseCode.CART_INGREDIENT_NOT_FOUND));
-            OrdersIngredient ordersIngredient = new OrdersIngredient();
-            ordersIngredient.setIngredient(cartIngredient.getIngredient());
-            ordersIngredient.setCount(cartIngredient.getCount());
-            return ordersIngredient;
+            return OrdersIngredient.createOrderIngredient(orders, cartIngredient.getIngredient(), cartIngredient.getCount());
         }).collect(Collectors.toList());
         orders.setOrdersIngredientList(ordersIngredients);
         return ordersRepository.save(orders).getId();
@@ -91,9 +84,9 @@ public class OrdersService {
     }
 
     // 주문 수정(배송지 수정)
-    public Long updateOrder(Long orderId, Orders orders) {
+    public Long updateOrder(Long orderId, Delivery delivery) {
         Orders order = ordersRepository.findById(orderId).orElseThrow(() -> new CustomException(ResponseCode.ORDERS_NOT_FOUND));
-        order.update(orders);
+        order.update(delivery);
         return order.getId();
     }
 

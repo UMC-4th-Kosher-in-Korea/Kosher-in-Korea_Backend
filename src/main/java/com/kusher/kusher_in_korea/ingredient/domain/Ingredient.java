@@ -1,12 +1,15 @@
 package com.kusher.kusher_in_korea.ingredient.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
-@Getter @Setter
+@Getter
+@Table(name = "ingredient")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ingredient { // 식재료 테이블
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ingredient_id")
@@ -25,10 +28,10 @@ public class Ingredient { // 식재료 테이블
     // 생성 메서드
     public static Ingredient createIngredient(String name, String image, int price, Category category) {
         Ingredient ingredient = new Ingredient();
-        ingredient.setName(name);
-        ingredient.setImage(image);
-        ingredient.setPrice(price);
-        ingredient.setCategory(category);
+        ingredient.name = name;
+        ingredient.image = image;
+        ingredient.price = price;
+        ingredient.category = category;
         return ingredient;
     }
 
