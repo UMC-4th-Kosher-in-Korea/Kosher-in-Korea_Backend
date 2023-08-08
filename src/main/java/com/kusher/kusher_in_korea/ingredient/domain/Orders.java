@@ -36,6 +36,16 @@ public class Orders { // 주문은 유저와 일대다 관계
         this.delivery = orders.getDelivery();
     }
 
+    // 생성 메서드
+    public static Orders createOrders(User user, OrderStatus status, Delivery delivery) {
+        Orders orders = new Orders();
+        orders.setUser(user);
+        orders.setStatus(status);
+        orders.setOrderDateTime(LocalDateTime.now());
+        orders.setDelivery(delivery);
+        return orders;
+    }
+
     // 배송지 설정
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
