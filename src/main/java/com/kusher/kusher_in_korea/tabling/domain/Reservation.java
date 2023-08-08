@@ -2,8 +2,9 @@ package com.kusher.kusher_in_korea.tabling.domain;
 
 import com.kusher.kusher_in_korea.auth.domain.User;
 import com.kusher.kusher_in_korea.tabling.dto.request.CreateReservationDto;
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,8 +12,8 @@ import java.time.LocalTime;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "reservation")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reservation {
 
     @Id
@@ -39,11 +40,19 @@ public class Reservation {
     // 생성 메서드
     public static Reservation createReservation(CreateReservationDto createReservationDto) {
         Reservation reservation = new Reservation();
-        reservation.setReservationDate(LocalDate.parse(createReservationDto.getReservationDate()));
-        reservation.setReservationTime(LocalTime.parse(createReservationDto.getReservationTime()));
-        reservation.setNumberOfPeople(createReservationDto.getNumberOfPeople());
-        reservation.setStatus("예약완료");
+        reservation.reservationDate = LocalDate.parse(createReservationDto.getReservationDate());
+        reservation.reservationTime = LocalTime.parse(createReservationDto.getReservationTime());
+        reservation.numberOfPeople = createReservationDto.getNumberOfPeople();
+        reservation.status = "예약완료";
         return reservation;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 
     // 비즈니스 로직

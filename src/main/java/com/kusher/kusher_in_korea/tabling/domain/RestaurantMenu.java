@@ -1,14 +1,15 @@
 package com.kusher.kusher_in_korea.tabling.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "restaurant_menu")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RestaurantMenu {
 
     @Id
@@ -25,4 +26,18 @@ public class RestaurantMenu {
     private int Price; // 메뉴가격
 
     private String menuDescription; // 메뉴설명
+
+    public static RestaurantMenu createRestaurantMenu(String menuName, int Price, String menuDescription) {
+        RestaurantMenu restaurantMenu = new RestaurantMenu();
+        restaurantMenu.menuName = menuName;
+        restaurantMenu.Price = Price;
+        restaurantMenu.menuDescription = menuDescription;
+        return restaurantMenu;
+    }
+
+    public void updateRestaurantMenu(String menuName, int Price, String menuDescription) {
+        this.menuName = menuName;
+        this.Price = Price;
+        this.menuDescription = menuDescription;
+    }
 }
