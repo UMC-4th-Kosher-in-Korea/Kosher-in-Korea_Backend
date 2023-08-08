@@ -20,9 +20,16 @@ public enum ResponseCode {
      * 404 NOT FOUND
      */
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, false,"User Not Found"),
+    CART_NOT_FOUND(HttpStatus.NOT_FOUND, false,"Cart Not Found"),
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, false,"Category Not Found"),
+    CART_INGREDIENT_NOT_FOUND(HttpStatus.NOT_FOUND, false,"Cart Ingredient Not Found"),
     RESTAURANT_NOT_FOUND(HttpStatus.NOT_FOUND, false,"Restaurant Not Found"),
     RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, false,"Reservation Not Found"),
     PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, false,"Payment Not Found"),
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, false,"Review Not Found"),
+    ORDERS_NOT_FOUND(HttpStatus.NOT_FOUND, false,"Orders Not Found"),
+    INGREDIENT_NOT_FOUND(HttpStatus.NOT_FOUND, false,"Ingredient Not Found"),
+
     /**
      * 409 CONFLICT
      */
