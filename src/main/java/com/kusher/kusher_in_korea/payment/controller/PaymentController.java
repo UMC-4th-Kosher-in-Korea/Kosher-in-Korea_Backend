@@ -5,8 +5,7 @@ import com.kusher.kusher_in_korea.ingredient.dto.response.OrdersDto;
 import com.kusher.kusher_in_korea.ingredient.service.OrdersService;
 import com.kusher.kusher_in_korea.payment.payApiResponse;
 import com.kusher.kusher_in_korea.payment.service.PaymentService;
-import com.kusher.kusher_in_korea.util.exception.ControllerException;
-import com.kusher.kusher_in_korea.util.exception.ServiceException;
+import com.kusher.kusher_in_korea.util.exception.PaymentException;
 import com.siot.IamportRestClient.IamportClient;
 import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.request.CancelData;
@@ -49,7 +48,7 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
 
     // 구매 창 GET
     @GetMapping("/payment")
-    public String paymentPage(Long orderId,HttpSession session, Model model) throws ControllerException {
+    public String paymentPage(Long orderId,HttpSession session, Model model) throws PaymentException {
         log.trace("paymentPage() invoked");
 
         try{
@@ -65,7 +64,7 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
             Objects.requireNonNull(order);
             model.addAttribute("__ORDER__",order);
         } catch (Exception e) {
-            throw new ControllerException(e);
+            throw new PaymentException(e);
         }
 
         return "/api/pay/payment";
@@ -77,7 +76,7 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
     public payApiResponse paymentByImpUid(
             @PathVariable(value = "imp_uid") String imp_uid,
             String orderId,
-            Long userId) throws IamportResponseException, IOException, ControllerException {
+            Long userId) throws IamportResponseException, IOException, PaymentException {
         log.trace("paymentByImpUid({},{},{}) invoked.",imp_uid,orderId,userId);
 
         payApiResponse response = new payApiResponse();
@@ -99,8 +98,8 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
 
             response.add("result", result);
             response.add("payment_id", payment.getMerchantUid());
-        }catch (ServiceException e) {
-            throw new ControllerException(e);
+        }catch (PaymentException e) {
+            throw new PaymentException(e);
         }
 
         return response;
@@ -119,7 +118,7 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
     @PostMapping("/refund/{imp_uid}")
     public IamportResponse<Payment> cancelPaymentByImpUid(
             @PathVariable(value = "imp_uid")String imp_uid,
-            CancelData cancelData) throws ControllerException {
+            CancelData cancelData) throws PaymentException {
         log.trace("cancelPaymentByImpUid({},{}) invoked.", imp_uid,cancelData);
 
         return null;
@@ -129,13 +128,13 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
     @GetMapping("/succeeded/{payment_id}")
     public String paySucceeded(
             @PathVariable("payment_id") String payment_id,
-            Model model) throws ControllerException {
+            Model model) throws PaymentException {
         log.trace("paySucceeded() invoked.");
 
         try {
             model.addAttribute("__PAYINFO__", this.paymentService.getPaymentInfo(payment_id));
-        } catch (ServiceException e) {
-            throw new ControllerException(e);
+        } catch (PaymentException e) {
+            throw new PaymentException(e);
         }
 
         return "/pay/paymentSucceeded";//예시 페이지 경로(얼마든지 변동 가능)

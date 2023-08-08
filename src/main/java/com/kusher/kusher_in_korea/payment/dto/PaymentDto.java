@@ -1,6 +1,6 @@
 package com.kusher.kusher_in_korea.payment.dto;
 
-import com.kusher.kusher_in_korea.payment.domain.Payment;
+import com.siot.IamportRestClient.response.Payment;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,4 +13,13 @@ public class PaymentDto {
     private Integer payAmount; //금액
     private String payMethod; //결제방법
     private String payCardName; //카드이름
+
+    public PaymentDto(Payment payment) {
+        this.setId(payment.getMerchantUid());
+        this.setUserId(userId);
+        this.setPayUid(payment.getImpUid());
+        this.setPayAmount(payment.getAmount().intValue());
+        this.setPayMethod(payment.getPayMethod());
+        this.setPayCardName(payment.getCardName());
+    }
 }

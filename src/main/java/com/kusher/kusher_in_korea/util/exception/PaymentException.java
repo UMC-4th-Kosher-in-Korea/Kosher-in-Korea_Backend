@@ -1,15 +1,11 @@
 package com.kusher.kusher_in_korea.util.exception;
 
-public class ControllerException extends Exception {
+public class PaymentException extends Exception {
     private static final long serialVersionUID = 1L;
-
-
-    public ControllerException(String message) {
+    public PaymentException(String message) {
         super(message);
     } // constructor #1
-
-
-    public ControllerException(Exception e) {
+    public PaymentException(Exception e) {
         super(e);
     } // constructor #2
 
