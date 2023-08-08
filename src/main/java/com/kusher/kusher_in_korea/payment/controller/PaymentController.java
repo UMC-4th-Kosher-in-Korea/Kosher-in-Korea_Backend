@@ -111,7 +111,7 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
     public String refundRequest() {
         log.trace("refundRequest() invoked.");
 
-        return "redirect:/mypage/pay/detail";
+        return "redirect:/mypage/pay/detail"; //예시 페이지 경로(얼마든지 변동 가능)
     }
 
     //환불(관리자 요청)
@@ -138,6 +138,6 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
             throw new ControllerException(e);
         }
 
-        return "/pay/paymentSucceeded";
+        return "/pay/paymentSucceeded";//예시 페이지 경로(얼마든지 변동 가능)
     }
 }
