@@ -9,6 +9,8 @@ import com.kusher.kusher_in_korea.ingredient.dto.response.IngredientDto;
 import com.kusher.kusher_in_korea.ingredient.repository.CategoryRepository;
 import com.kusher.kusher_in_korea.ingredient.repository.IngredientRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,11 +24,13 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
     private final CategoryRepository categoryRepository;
 
     // 전체 식재료 조회
-    public List<IngredientDto> findAllIngredients() {
-        List<Ingredient> ingredients = ingredientRepository.findAll();
-        return ingredients.stream()
-                .map(IngredientDto::new)
-                .collect(Collectors.toList());
+    public Page<IngredientDto> findAllIngredients(Pageable pageable) {
+        try {
+            Page<Ingredient> ingredients = ingredientRepository.findAll(pageable);
+            return ingredients.map(IngredientDto::new);
+        } catch (Exception e) {
+            throw new IllegalStateException("식재료 조회 중 오류가 발생했습니다.");
+        }
     }
 
     // 클라이언트가 클릭했을 때를 대비한 특정 식재료 조회
