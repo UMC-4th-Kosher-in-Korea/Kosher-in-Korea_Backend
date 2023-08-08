@@ -54,6 +54,8 @@ public class ReviewService {
 
     // 리뷰 삭제
     public void deleteReview(Long reviewId) {
+        reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new CustomException(ResponseCode.REVIEW_NOT_FOUND));
         reviewRepository.deleteById(reviewId);
     }
 

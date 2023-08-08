@@ -13,8 +13,8 @@ import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,11 +55,7 @@ public class UserService {
     // 유저의 예약 조회
     public List<ReservationDto> getUserReservation(Long userId) {
         List<Reservation> reservations = reservationRepository.findAllByUserId(userId);
-        List<ReservationDto> reservationDtos = new ArrayList<>();
-        for (Reservation reservation : reservations) {
-            reservationDtos.add(new ReservationDto(reservation));
-        }
-        return reservationDtos;
+        return reservations.stream().map(ReservationDto::new).collect(Collectors.toList());
     }
 
     // 유저의 장바구니 조회
