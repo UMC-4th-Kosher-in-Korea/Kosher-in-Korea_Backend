@@ -12,11 +12,13 @@ import com.kusher.kusher_in_korea.util.exception.CustomException;
 import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
@@ -24,6 +26,7 @@ public class ReviewService {
     private final RestaurantRepository restaurantRepository;
 
     // 리뷰 생성
+    @Transactional
     public Long createReview(CreateReviewDto createReviewDto, String imageUrl) {
         User user = userRepository.findById(createReviewDto.getUserId())
                 .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
@@ -42,6 +45,8 @@ public class ReviewService {
 
     // 특정 식당에 대한 리뷰 조회
     public List<ReviewDto> getReviewsByRestaurantId(Long restaurantId) {
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         List<Review> reviews = reviewRepository.findByRestaurantId(restaurantId);
 
         return reviews.stream()
@@ -51,6 +56,8 @@ public class ReviewService {
 
     // 특정 유저가 남긴 리뷰 조회
     public List<ReviewDto> getReviewsByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         List<Review> reviews = reviewRepository.findByUserId(userId);
 
         return reviews.stream()
@@ -59,6 +66,7 @@ public class ReviewService {
     }
 
     // 리뷰 삭제
+    @Transactional
     public void deleteReview(Long reviewId) {
         reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new CustomException(ResponseCode.REVIEW_NOT_FOUND));

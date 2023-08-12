@@ -14,11 +14,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class IngredientService { // 식재료 및 카테고리를 제어한다.
 
@@ -61,6 +63,7 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
      * 아래부터는 서버에서 사용하기 위한 관리용 메서드
      */
     // 식재료 추가
+    @Transactional
     public Long addIngredient(CreateIngredientDto ingredientDto, String imageUrl) {
         validateDuplicateIngredient(ingredientDto.getIngredientName());
         Category category = categoryRepository.findByName(ingredientDto.getIngredientCategory()).orElseThrow(() -> new CustomException(ResponseCode.CATEGORY_NOT_FOUND));
@@ -77,6 +80,7 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
     }
 
     // 식재료 수정
+    @Transactional
     public Long updateIngredient(Long ingredientId, RequestIngredientDto requestIngredientDto) {
         Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow(() -> new CustomException(ResponseCode.INGREDIENT_NOT_FOUND));
         Category category = categoryRepository.findByName(requestIngredientDto.getIngredientCategory()).orElseThrow(() -> new CustomException(ResponseCode.CATEGORY_NOT_FOUND));
@@ -85,11 +89,13 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
     }
 
     // 식재료 삭제
+    @Transactional
     public void deleteIngredient(Long ingredientId) {
         ingredientRepository.deleteById(ingredientId);
     }
 
     // 카테고리 추가
+    @Transactional
     public Long addCategory(String categoryName) {
         validateDuplicateCategory(categoryName);
         Category category = Category.createCategory(categoryName);
@@ -105,6 +111,7 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
     }
 
     // 카테고리 수정
+    @Transactional
     public Long updateCategory(Long categoryId, String categoryName) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new CustomException(ResponseCode.CATEGORY_NOT_FOUND));
         category.setName(categoryName);
@@ -112,6 +119,7 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
     }
 
     // 카테고리 삭제
+    @Transactional
     public void deleteCategory(Long categoryId) {
         categoryRepository.deleteById(categoryId);
     }

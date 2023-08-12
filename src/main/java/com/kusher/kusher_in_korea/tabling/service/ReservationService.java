@@ -13,6 +13,7 @@ import com.kusher.kusher_in_korea.util.exception.ReserveFailException;
 import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ReservationService {
 
@@ -42,6 +44,7 @@ public class ReservationService {
     }
 
     // 예약 생성
+    @Transactional
     public Long createReservation(CreateReservationDto createReservationDto) {
         Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(createReservationDto.getRestaurantId());
         Restaurant restaurant = optionalRestaurant.orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
@@ -77,6 +80,7 @@ public class ReservationService {
     }
 
     // 예약 수정(시간, 인원수)
+    @Transactional
     public Long updateReservation(Long reservationId, UpdateReservationDto updateReservationDto) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ResponseCode.RESERVATION_NOT_FOUND));
         Restaurant restaurant = restaurantRepository.findById(updateReservationDto.getRestaurantId()).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
@@ -89,6 +93,7 @@ public class ReservationService {
     }
 
     // 예약 취소(상태 변경)
+    @Transactional
     public void cancelReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ResponseCode.RESERVATION_NOT_FOUND));
         if(!reservation.isCancelable()) {

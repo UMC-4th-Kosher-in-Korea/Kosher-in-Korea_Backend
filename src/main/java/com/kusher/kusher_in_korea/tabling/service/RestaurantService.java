@@ -13,12 +13,14 @@ import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class RestaurantService {
 
@@ -53,16 +55,18 @@ public class RestaurantService {
     }
 
     // 새 식당 추가 (점주 타입만 가능)
+    @Transactional
     public Long saveRestaurant(CreateRestaurantDto createRestaurantDto) {
         User user = userRepository.findById(createRestaurantDto.getUserId()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
-        if (!Objects.equals(user.getUserType(), "점주"))
-            throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
+        /*if (!Objects.equals(user.getUserType(), "점주"))
+            throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);*/
         Restaurant restaurant = Restaurant.createRestaurant(createRestaurantDto);
         restaurantRepository.save(restaurant);
         return restaurant.getId();
     }
 
     // 특정 식당 정보 수정
+    @Transactional
     public Long updateRestaurant(Long restaurantId, UpdateRestaurantDto restaurantDto) {
         Long userId = restaurantDto.getUserId();
         if (!isOwner(restaurantId, userId)) throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
@@ -74,6 +78,7 @@ public class RestaurantService {
     }
 
     // 특정 식당 메뉴 추가
+    @Transactional
     public Long saveRestaurantMenu(Long restaurantId, CreateRestaurantMenuDto createRestaurantMenuDto) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         if (!Objects.equals(createRestaurantMenuDto.getOwnerId(), restaurant.getOwnerId()))
@@ -85,6 +90,7 @@ public class RestaurantService {
     }
 
     // 특정 식당 메뉴 수정
+    @Transactional
     public void updateRestaurantMenu(Long restaurantId, Long menuId, UpdateRestaurantMenuDto restaurantMenuDto) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         if (!Objects.equals(restaurantMenuDto.getOwnerId(), restaurant.getOwnerId()))
@@ -94,6 +100,7 @@ public class RestaurantService {
     }
 
     // 특정 식당 메뉴 삭제
+    @Transactional
     public void deleteRestaurantMenu(Long restaurantId, Long menuId, DeleteRestaurantMenuDto deleteRestaurantMenuDto) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         if (!Objects.equals(deleteRestaurantMenuDto.getOwnerId(), restaurant.getOwnerId()))

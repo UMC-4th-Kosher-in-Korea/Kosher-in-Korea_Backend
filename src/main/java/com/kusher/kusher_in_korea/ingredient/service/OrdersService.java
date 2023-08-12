@@ -14,11 +14,13 @@ import com.kusher.kusher_in_korea.util.exception.CustomException;
 import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class OrdersService {
 
@@ -37,6 +39,7 @@ public class OrdersService {
     }
 
     // 장바구니 내부에 특정 상품 추가 (장바구니 담기)
+    @Transactional
     public Long addCartIngredient(AddCartIngredientDto addCartIngredientDto) {
         Cart cart = cartRepository.findById(addCartIngredientDto.getCartId()).orElseThrow(() -> new CustomException(ResponseCode.CART_NOT_FOUND));
         CartIngredient cartIngredient = CartIngredient.createCartIngredient(cart, addCartIngredientDto.getCount(), ingredientRepository.findById(addCartIngredientDto.getIngredientId()).orElseThrow(() -> new CustomException(ResponseCode.INGREDIENT_NOT_FOUND)));
@@ -44,6 +47,7 @@ public class OrdersService {
     }
 
     // 장바구니 내부 특정 상품 개수 증가
+    @Transactional
     public void increaseCartIngredient(Long cartIngredientId) {
         CartIngredient cartIngredient = cartIngredientRepository.findById(cartIngredientId).orElseThrow(() -> new CustomException(ResponseCode.CART_INGREDIENT_NOT_FOUND));
         cartIngredient.addCount();
@@ -51,6 +55,7 @@ public class OrdersService {
     }
 
     // 장바구니 내부 특정 상품 개수 감소
+    @Transactional
     public void decreaseCartIngredient(Long cartIngredientId) {
         CartIngredient cartIngredient = cartIngredientRepository.findById(cartIngredientId).orElseThrow(() -> new CustomException(ResponseCode.CART_INGREDIENT_NOT_FOUND));
         cartIngredient.subtractCount();
@@ -58,12 +63,14 @@ public class OrdersService {
     }
 
     // 장바구니 내부 특정 상품 삭제
+    @Transactional
     public void deleteCartIngredient(Long cartIngredientId) {
         CartIngredient cartIngredient = cartIngredientRepository.findById(cartIngredientId).orElseThrow(() -> new CustomException(ResponseCode.CART_INGREDIENT_NOT_FOUND));
         cartIngredientRepository.delete(cartIngredient);
     }
 
     // 주문 생성
+    @Transactional
     public Long createOrder(CreateOrdersDto createOrdersDto) {
         User user = userRepository.findById(createOrdersDto.getUserId()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         Orders orders = Orders.createOrders(user, createOrdersDto.getOrderStatus(), createOrdersDto.getDelivery());
@@ -78,12 +85,14 @@ public class OrdersService {
     }
 
     // 주문 취소
+    @Transactional
     public void cancelOrder(Long orderId) {
         Orders order = ordersRepository.findById(orderId).orElseThrow(() -> new CustomException(ResponseCode.ORDERS_NOT_FOUND));
         order.cancel();
     }
 
     // 주문 수정(배송지 수정)
+    @Transactional
     public Long updateOrder(Long orderId, Delivery delivery) {
         Orders order = ordersRepository.findById(orderId).orElseThrow(() -> new CustomException(ResponseCode.ORDERS_NOT_FOUND));
         order.update(delivery);
