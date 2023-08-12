@@ -1,5 +1,6 @@
 package com.kusher.kusher_in_korea.auth.controller;
 
+import com.kusher.kusher_in_korea.auth.dto.RequestUserDto;
 import com.kusher.kusher_in_korea.ingredient.dto.response.CartDto;
 import com.kusher.kusher_in_korea.ingredient.dto.response.OrdersDto;
 import com.kusher.kusher_in_korea.ingredient.service.OrdersService;
@@ -24,11 +25,18 @@ public class UserController {
     private final ReviewService reviewService;
     private final OrdersService ordersService;
 
-    // 유저 추가
-    @PostMapping
-    public ApiResponse<Long> createUser(@RequestBody UserDto userDto) {
+    // 회원가입
+    @PostMapping("/create")
+    public ApiResponse<Long> createUser(@RequestBody RequestUserDto userDto) {
         Long userId = userService.createUser(userDto);
         return ApiResponse.success(userId, ResponseCode.USER_CREATE_SUCCESS.getMessage());
+    }
+
+    // 로그인
+    @PostMapping("/login")
+    public ApiResponse<UserDto> login(@RequestBody UserDto userDto) {
+        UserDto loginUser = userService.login(userDto);
+        return ApiResponse.success(loginUser, ResponseCode.LOGIN_SUCCESS.getMessage());
     }
 
     // 유저 정보 조회
@@ -36,13 +44,6 @@ public class UserController {
     public ApiResponse<UserDto> getUser(@PathVariable Long userId) {
         UserDto userDto = userService.getUser(userId);
         return ApiResponse.success(userDto, ResponseCode.USER_READ_SUCCESS.getMessage());
-    }
-
-    // 유저 정보 수정
-    @PutMapping("/{userId}")
-    public ApiResponse<Long> updateUser(@PathVariable Long userId, @RequestBody UserDto userDto) {
-        Long updatedUserId = userService.updateUser(userId, userDto);
-        return ApiResponse.success(updatedUserId, ResponseCode.USER_UPDATE_SUCCESS.getMessage());
     }
 
     // 유저의 예약 조회

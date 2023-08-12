@@ -1,5 +1,6 @@
 package com.kusher.kusher_in_korea.auth.service;
 
+import com.kusher.kusher_in_korea.auth.dto.RequestUserDto;
 import com.kusher.kusher_in_korea.ingredient.domain.Cart;
 import com.kusher.kusher_in_korea.ingredient.dto.response.CartDto;
 import com.kusher.kusher_in_korea.tabling.domain.Reservation;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,32 +26,31 @@ public class UserService {
     private final ReservationRepository reservationRepository;
 
     // 유저 추가
-    public Long createUser(UserDto userDto) {
-        ValidationDuplicateUser(userDto);
+    public Long createUser(RequestUserDto userDto) {
+        ValidationDuplicateUser(userDto.getUserEmail());
         User user = User.createUser(userDto);
         Cart cart = Cart.createCart(user); // 유저 생성 시 유저가 사용할 장바구니도 생성
         return userRepository.save(user).getId();
     }
 
     // 유저명 중복 방지
-    public void ValidationDuplicateUser(UserDto userDto) {
-        List<User> findUsers = userRepository.findByUserName(userDto.getUserName());
-        if (!findUsers.isEmpty()) {
+    public void ValidationDuplicateUser(String userEmail) {
+        Optional<User> findUsers = userRepository.findByUserEmail(userEmail);
+        if (findUsers.isPresent()) {
             throw new CustomException(ResponseCode.DUPLICATED_USER);
         }
+    }
+
+    // 로그인
+    public UserDto login(UserDto userDto) {
+        User user = userRepository.findByUserEmail(userDto.getUserEmail()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+        return new UserDto(user);
     }
 
     // 유저 정보 조회
     public UserDto getUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         return new UserDto(user);
-    }
-
-    // 유저 정보 수정
-    public Long updateUser(Long userId, UserDto userDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
-        user.updateUser(userDto);
-        return userId;
     }
 
     // 유저의 예약 조회
