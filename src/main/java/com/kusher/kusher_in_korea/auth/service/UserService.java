@@ -49,7 +49,7 @@ public class UserService {
     }
 
     // 로그인
-    public UserDto login(UserDto userDto) {
+    public UserDto login(RequestUserDto userDto) {
         User user = userRepository.findByUserEmail(userDto.getUserEmail()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         return new UserDto(user);
     }
