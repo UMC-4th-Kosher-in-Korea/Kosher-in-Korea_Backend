@@ -9,14 +9,12 @@ import lombok.NoArgsConstructor;
 public class UserDto {
 
     private Long id; // 유저번호
-    private String userName; // 유저이름
-    private String userPhone; // 전화번호
+    private String userEmail; // 유저이메일
     private String userType; // 유저유형 (일반유저 or 식당주인)
 
     public UserDto(User user){
         this.id = user.getId();
-        this.userName = user.getUserName();
-        this.userPhone = user.getUserPhone();
+        this.userEmail = user.getUserEmail();
         this.userType = user.getUserType();
     }
 }
