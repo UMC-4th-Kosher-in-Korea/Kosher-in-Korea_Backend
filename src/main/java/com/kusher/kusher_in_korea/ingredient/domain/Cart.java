@@ -18,7 +18,7 @@ public class Cart { // User와 장바구니는 일대일 관계
     @Column(name = "cart_id")
     private Long id;
 
-    @OneToOne(mappedBy = "cart", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "cart", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user; // 장바구니를 소유한 회원
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true) // orphanRemoval: 장바구니에서 재료를 삭제하면 DB에서도 삭제
