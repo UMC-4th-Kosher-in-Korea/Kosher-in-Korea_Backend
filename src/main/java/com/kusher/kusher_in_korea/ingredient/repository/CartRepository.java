@@ -1,6 +1,7 @@
 package com.kusher.kusher_in_korea.ingredient.repository;
 
 import com.kusher.kusher_in_korea.ingredient.domain.Cart;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

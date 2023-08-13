@@ -3,6 +3,7 @@ package com.kusher.kusher_in_korea.auth.service;
 import com.kusher.kusher_in_korea.auth.dto.RequestUserDto;
 import com.kusher.kusher_in_korea.ingredient.domain.Cart;
 import com.kusher.kusher_in_korea.ingredient.dto.response.CartDto;
+import com.kusher.kusher_in_korea.ingredient.repository.CartRepository;
 import com.kusher.kusher_in_korea.tabling.domain.Reservation;
 import com.kusher.kusher_in_korea.auth.domain.User;
 import com.kusher.kusher_in_korea.tabling.dto.response.ReservationDto;
@@ -13,24 +14,30 @@ import com.kusher.kusher_in_korea.util.exception.CustomException;
 import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final ReservationRepository reservationRepository;
+    private final CartRepository cartRepository;
 
     // 유저 추가
+    @Transactional
     public Long createUser(RequestUserDto userDto) {
         ValidationDuplicateUser(userDto.getUserEmail());
         User user = User.createUser(userDto);
         Cart cart = Cart.createCart(user); // 유저 생성 시 유저가 사용할 장바구니도 생성
-        return userRepository.save(user).getId();
+        Long id = userRepository.save(user).getId();
+        cartRepository.save(cart);
+        return id;
     }
 
     // 유저명 중복 방지
@@ -42,7 +49,7 @@ public class UserService {
     }
 
     // 로그인
-    public UserDto login(UserDto userDto) {
+    public UserDto login(RequestUserDto userDto) {
         User user = userRepository.findByUserEmail(userDto.getUserEmail()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
         return new UserDto(user);
     }

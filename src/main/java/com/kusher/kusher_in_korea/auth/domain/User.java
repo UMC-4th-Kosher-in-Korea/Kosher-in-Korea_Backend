@@ -22,7 +22,7 @@ public class User {
 
     private String userType; // 유저유형 (유저 or 점주)
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
     private Cart cart; // 유저와 장바구니는 일대일 관계
 
