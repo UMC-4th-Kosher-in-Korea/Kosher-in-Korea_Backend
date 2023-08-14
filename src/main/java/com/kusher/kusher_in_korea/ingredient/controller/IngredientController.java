@@ -57,7 +57,10 @@ public class IngredientController {
     // 식재료 추가
     @PostMapping("/api/ingredient")
     public ApiResponse<Long> addIngredient(CreateIngredientDto ingredientDto) throws IOException {
-        String imageUrl = imageUploadService.uploadImage(ingredientDto.getIngredientImage());
+        String imageUrl = null;
+        if (ingredientDto.getIngredientImage() != null) {
+            imageUrl = imageUploadService.uploadImage(ingredientDto.getIngredientImage());
+        }
         Long id = ingredientService.addIngredient(ingredientDto, imageUrl);
         return ApiResponse.success(id, ResponseCode.INGREDIENT_CREATE_SUCCESS.getMessage());
     }

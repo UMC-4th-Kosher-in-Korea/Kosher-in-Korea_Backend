@@ -25,12 +25,15 @@ public class RestaurantMenu {
 
     private int Price; // 메뉴가격
 
+    private String menuImage; // 메뉴이미지
+
     private String menuDescription; // 메뉴설명
 
-    public static RestaurantMenu createRestaurantMenu(String menuName, int Price, String menuDescription) {
+    public static RestaurantMenu createRestaurantMenu(String menuName, int Price, String menuDescription, String menuImage) {
         RestaurantMenu restaurantMenu = new RestaurantMenu();
         restaurantMenu.menuName = menuName;
         restaurantMenu.Price = Price;
+        restaurantMenu.menuImage = menuImage;
         restaurantMenu.menuDescription = menuDescription;
         return restaurantMenu;
     }
@@ -39,5 +42,9 @@ public class RestaurantMenu {
         this.menuName = menuName;
         this.Price = Price;
         this.menuDescription = menuDescription;
+    }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
     }
 }

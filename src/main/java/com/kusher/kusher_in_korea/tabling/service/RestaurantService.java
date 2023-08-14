@@ -79,12 +79,12 @@ public class RestaurantService {
 
     // 특정 식당 메뉴 추가
     @Transactional
-    public Long saveRestaurantMenu(Long restaurantId, CreateRestaurantMenuDto createRestaurantMenuDto) {
+    public Long saveRestaurantMenu(Long restaurantId, CreateRestaurantMenuDto createRestaurantMenuDto, String menuImageUrl) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         if (!Objects.equals(createRestaurantMenuDto.getOwnerId(), restaurant.getOwnerId()))
             throw new CustomException(ResponseCode.NOT_RESTAURANT_OWNER);
 
-        restaurant.addRestaurantMenu(createRestaurantMenuDto);
+        restaurant.addRestaurantMenu(createRestaurantMenuDto, menuImageUrl);
         restaurantRepository.save(restaurant);
         return restaurant.getId();
     }

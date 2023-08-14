@@ -18,10 +18,13 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final ImageUploadService imageUploadService;
 
-    // 리뷰 생성
+    // 리뷰 생성(사진 업로드 선택사항)
     @PostMapping
     public ApiResponse<Long> createReview(CreateReviewDto createReviewDto) throws IOException {
-        String imageUrl = imageUploadService.uploadImage(createReviewDto.getReviewImage());
+        String imageUrl = null;
+        if (createReviewDto.getReviewImage() != null) {
+            imageUrl = imageUploadService.uploadImage(createReviewDto.getReviewImage());
+        }
         Long reviewId = reviewService.createReview(createReviewDto, imageUrl);
         return ApiResponse.success(reviewId, ResponseCode.REVIEW_CREATE_SUCCESS.getMessage());
     }
