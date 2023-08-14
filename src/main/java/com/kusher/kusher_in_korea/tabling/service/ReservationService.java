@@ -48,9 +48,8 @@ public class ReservationService {
     public Long createReservation(CreateReservationDto createReservationDto) {
         Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(createReservationDto.getRestaurantId());
         Restaurant restaurant = optionalRestaurant.orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
-        String time = createReservationDto.getReservationTime();
-        LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
-        checkAvailableVisitorCount(restaurant, dateTime, createReservationDto.getNumberOfPeople());
+        LocalDateTime reservationTime = LocalDateTime.of(createReservationDto.getReservationDate(), createReservationDto.getReservationTime());
+        checkAvailableVisitorCount(restaurant, reservationTime, createReservationDto.getNumberOfPeople());
         Reservation reservation = Reservation.createReservation(createReservationDto);
         reservation.setRestaurant(restaurantRepository.findById(createReservationDto.getRestaurantId()).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND)));
         reservation.setUser(userRepository.findById(createReservationDto.getUserId()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND)));
@@ -84,9 +83,8 @@ public class ReservationService {
     public Long updateReservation(Long reservationId, UpdateReservationDto updateReservationDto) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ResponseCode.RESERVATION_NOT_FOUND));
         Restaurant restaurant = restaurantRepository.findById(updateReservationDto.getRestaurantId()).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
-        String time = updateReservationDto.getReservationTime();
-        LocalDateTime dateTime = LocalDateTime.parse(time, formatter);
-        checkAvailableVisitorCount(restaurant, dateTime, updateReservationDto.getNumberOfPeople());
+        LocalDateTime reservationTime = LocalDateTime.of(updateReservationDto.getReservationDate(), updateReservationDto.getReservationTime());
+        checkAvailableVisitorCount(restaurant, reservationTime, updateReservationDto.getNumberOfPeople());
         reservation.changeReservation(updateReservationDto.getReservationDate(), updateReservationDto.getReservationTime(), updateReservationDto.getNumberOfPeople());
         reservationRepository.save(reservation);
         return reservation.getId();

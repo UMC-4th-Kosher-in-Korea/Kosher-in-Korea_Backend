@@ -1,7 +1,7 @@
 package com.kusher.kusher_in_korea.ingredient.controller;
 
-import com.kusher.kusher_in_korea.ingredient.domain.Delivery;
 import com.kusher.kusher_in_korea.ingredient.dto.request.AddCartIngredientDto;
+import com.kusher.kusher_in_korea.ingredient.dto.request.ChangeAddressDto;
 import com.kusher.kusher_in_korea.ingredient.dto.request.CreateOrdersDto;
 import com.kusher.kusher_in_korea.ingredient.dto.response.OrdersDto;
 import com.kusher.kusher_in_korea.ingredient.service.OrdersService;
@@ -54,15 +54,15 @@ public class OrdersController {
 
     // 주문 생성
     @PostMapping("/api/orders")
-    public ApiResponse<Long> createOrder(CreateOrdersDto orders) {
+    public ApiResponse<Long> createOrder(@RequestBody CreateOrdersDto orders) {
         Long orderId = ordersService.createOrder(orders);
         return ApiResponse.success(orderId, ResponseCode.ORDERS_CREATE_SUCCESS.getMessage());
     }
 
     // 주문 수정(배송지 변경)
     @PutMapping("/api/orders/{orderId}")
-    public ApiResponse<Long> updateOrderDest(@PathVariable Long orderId, Delivery delivery) {
-        Long updatedOrderId = ordersService.updateOrder(orderId, delivery);
+    public ApiResponse<Long> updateOrderDest(@PathVariable Long orderId, @RequestBody ChangeAddressDto changeAddressDto) {
+        Long updatedOrderId = ordersService.updateOrder(orderId, changeAddressDto);
         return ApiResponse.success(updatedOrderId, ResponseCode.ORDERS_UPDATE_SUCCESS.getMessage());
     }
 

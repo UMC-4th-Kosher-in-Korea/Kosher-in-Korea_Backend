@@ -40,8 +40,8 @@ public class Reservation {
     // 생성 메서드
     public static Reservation createReservation(CreateReservationDto createReservationDto) {
         Reservation reservation = new Reservation();
-        reservation.reservationDate = LocalDate.parse(createReservationDto.getReservationDate());
-        reservation.reservationTime = LocalTime.parse(createReservationDto.getReservationTime());
+        reservation.reservationDate = createReservationDto.getReservationDate();
+        reservation.reservationTime = createReservationDto.getReservationTime();
         reservation.numberOfPeople = createReservationDto.getNumberOfPeople();
         reservation.status = "예약완료";
         return reservation;
@@ -57,9 +57,9 @@ public class Reservation {
 
     // 비즈니스 로직
     // 예약 변경(날짜, 시간, 인원수)
-    public void changeReservation(String reservationDate, String reservationTime, int numberOfPeople) {
-        this.reservationDate = LocalDate.parse(reservationDate);
-        this.reservationTime = LocalTime.parse(reservationTime);
+    public void changeReservation(LocalDate reservationDate, LocalTime reservationTime, int numberOfPeople) {
+        this.reservationDate = reservationDate;
+        this.reservationTime = reservationTime;
         this.numberOfPeople = numberOfPeople;
     }
 
