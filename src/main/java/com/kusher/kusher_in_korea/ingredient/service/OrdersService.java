@@ -73,7 +73,9 @@ public class OrdersService {
     @Transactional
     public Long createOrder(CreateOrdersDto createOrdersDto) {
         User user = userRepository.findById(createOrdersDto.getUserId()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
-        Orders orders = Orders.createOrders(user, createOrdersDto.getOrderStatus(), createOrdersDto.getDelivery());
+        Delivery delivery = Delivery.createDelivery(createOrdersDto.getAddress());
+        Orders orders = Orders.createOrders(user, createOrdersDto.getOrderStatus(), delivery);
+        delivery.setOrders(orders);
 
         // 장바구니_상품_리스트 -> 주문_상품_리스트로 전환
         List<OrdersIngredient> ordersIngredients = createOrdersDto.getCartIngredients().stream().map(cartIngredientDto -> {

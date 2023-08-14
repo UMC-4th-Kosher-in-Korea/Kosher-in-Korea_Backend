@@ -54,7 +54,7 @@ public class OrdersController {
 
     // 주문 생성
     @PostMapping("/api/orders")
-    public ApiResponse<Long> createOrder(CreateOrdersDto orders) {
+    public ApiResponse<Long> createOrder(@RequestBody CreateOrdersDto orders) {
         Long orderId = ordersService.createOrder(orders);
         return ApiResponse.success(orderId, ResponseCode.ORDERS_CREATE_SUCCESS.getMessage());
     }
