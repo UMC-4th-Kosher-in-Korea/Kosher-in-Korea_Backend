@@ -40,7 +40,7 @@ public class Restaurant {
 
     private String description; // 식당설명
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<RestaurantMenu> restaurantMenus = new ArrayList<>(); // 식당메뉴
 
     // 생성 메서드
@@ -73,6 +73,7 @@ public class Restaurant {
     // 식당에 메뉴 추가
     public void addRestaurantMenu(CreateRestaurantMenuDto restaurantMenu) {
         RestaurantMenu newMenu = RestaurantMenu.createRestaurantMenu(restaurantMenu.getMenuName(), restaurantMenu.getPrice(), restaurantMenu.getMenuDescription());
+        newMenu.setRestaurant(this);
         this.getRestaurantMenus().add(newMenu);
     }
 

@@ -40,4 +40,8 @@ public class RestaurantMenu {
         this.Price = Price;
         this.menuDescription = menuDescription;
     }
+
+    public void setRestaurant(Restaurant restaurant) {
+        this.restaurant = restaurant;
+    }
 }
