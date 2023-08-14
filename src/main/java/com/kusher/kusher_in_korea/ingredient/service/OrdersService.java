@@ -4,6 +4,7 @@ import com.kusher.kusher_in_korea.auth.domain.User;
 import com.kusher.kusher_in_korea.auth.repository.UserRepository;
 import com.kusher.kusher_in_korea.ingredient.domain.*;
 import com.kusher.kusher_in_korea.ingredient.dto.request.AddCartIngredientDto;
+import com.kusher.kusher_in_korea.ingredient.dto.request.ChangeAddressDto;
 import com.kusher.kusher_in_korea.ingredient.dto.request.CreateOrdersDto;
 import com.kusher.kusher_in_korea.ingredient.dto.response.OrdersDto;
 import com.kusher.kusher_in_korea.ingredient.repository.CartIngredientRepository;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -95,9 +97,10 @@ public class OrdersService {
 
     // 주문 수정(배송지 수정)
     @Transactional
-    public Long updateOrder(Long orderId, Delivery delivery) {
+    public Long updateOrder(Long orderId, ChangeAddressDto changeAddressDto) {
         Orders order = ordersRepository.findById(orderId).orElseThrow(() -> new CustomException(ResponseCode.ORDERS_NOT_FOUND));
-        order.update(delivery);
+        if(!Objects.equals(order.getUser().getId(), changeAddressDto.getUserId())) throw new CustomException(ResponseCode.USER_NOT_FOUND);
+        order.getDelivery().setAddress(changeAddressDto.getAddress());
         return order.getId();
     }
 
