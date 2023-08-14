@@ -1,5 +1,6 @@
 package com.kusher.kusher_in_korea.tabling.controller;
 
+import com.kusher.kusher_in_korea.image.service.ImageUploadService;
 import com.kusher.kusher_in_korea.reviewfeedback.dto.ReviewDto;
 import com.kusher.kusher_in_korea.reviewfeedback.service.ReviewService;
 import com.kusher.kusher_in_korea.tabling.dto.request.*;
@@ -13,6 +14,7 @@ import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,6 +24,7 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
     private final ReviewService reviewService;
     private final ReservationService reservationService;
+    private final ImageUploadService imageUploadService;
 
     // 모든 식당 조회
     @GetMapping
@@ -58,10 +61,14 @@ public class RestaurantController {
         return ApiResponse.success(updatedRestaurantId, ResponseCode.RESTAURANT_UPDATE_SUCCESS.getMessage());
     }
 
-    // 특정 식당 메뉴 추가
+    // 특정 식당 메뉴 추가 (사진 필요)
     @PostMapping("/{restaurantId}/menu")
-    public ApiResponse<Long> addNewRestaurantMenu(@PathVariable Long restaurantId, @RequestBody CreateRestaurantMenuDto createRestaurantMenuDto) {
-        Long menuId = restaurantService.saveRestaurantMenu(restaurantId, createRestaurantMenuDto);
+    public ApiResponse<Long> addNewRestaurantMenu(@PathVariable Long restaurantId, @RequestBody CreateRestaurantMenuDto createRestaurantMenuDto) throws IOException {
+        String imageUrl = null; // 이미지가 없을 경우 null
+        if (createRestaurantMenuDto.getMenuImage() != null) { // 이미지가 있을 경우
+            imageUrl = imageUploadService.uploadImage(createRestaurantMenuDto.getMenuImage());
+        }
+        Long menuId = restaurantService.saveRestaurantMenu(restaurantId, createRestaurantMenuDto, imageUrl);
         return ApiResponse.success(menuId, ResponseCode.RESTAURANT_MENU_CREATE_SUCCESS.getMessage());
     }
 

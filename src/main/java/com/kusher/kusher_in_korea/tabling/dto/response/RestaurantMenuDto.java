@@ -15,6 +15,8 @@ public class RestaurantMenuDto {
 
     private int price; // 메뉴가격
 
+    private String menuImage; // 메뉴이미지
+
     private String menuDescription; // 메뉴설명
 
     public RestaurantMenuDto(RestaurantMenu restaurantMenu) {
@@ -22,6 +24,7 @@ public class RestaurantMenuDto {
         this.restaurantId = restaurantMenu.getRestaurant().getId();
         this.menuName = restaurantMenu.getMenuName();
         this.price = restaurantMenu.getPrice();
+        this.menuImage = restaurantMenu.getMenuImage();
         this.menuDescription = restaurantMenu.getMenuDescription();
     }
 }
