@@ -34,7 +34,7 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ApiResponse<UserDto> login(@RequestBody UserDto userDto) {
+    public ApiResponse<UserDto> login(@RequestBody RequestUserDto userDto) {
         UserDto loginUser = userService.login(userDto);
         return ApiResponse.success(loginUser, ResponseCode.LOGIN_SUCCESS.getMessage());
     }
