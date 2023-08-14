@@ -40,7 +40,7 @@ public class Restaurant {
 
     private String description; // 식당설명
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RestaurantMenu> restaurantMenus = new ArrayList<>(); // 식당메뉴
 
     // 생성 메서드
@@ -92,6 +92,7 @@ public class Restaurant {
         for (RestaurantMenu menu : this.getRestaurantMenus()) {
             if (menu.getId().equals(menuId)) {
                 this.getRestaurantMenus().remove(menu);
+                menu.setRestaurant(null); // 이제 이 메뉴는 식당에 속하지 않음
                 break;
             }
         }
