@@ -23,6 +23,7 @@ public class FeedbackService {
     private final UserRepository userRepository;
 
     // 피드백 생성
+    @Transactional
     public Long createFeedback(CreateFeedbackDto createFeedbackDto) {
         User user = userRepository.findById(createFeedbackDto.getUserId())
                 .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
