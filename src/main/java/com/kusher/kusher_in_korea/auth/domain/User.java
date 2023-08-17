@@ -1,6 +1,5 @@
 package com.kusher.kusher_in_korea.auth.domain;
 
-import com.kusher.kusher_in_korea.auth.dto.RequestUserDto;
 import com.kusher.kusher_in_korea.ingredient.domain.Cart;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,20 +17,40 @@ public class User {
     @Column(name = "user_id")
     private Long id; // 유저번호
 
+    private String userName; // 유저이름
+
     private String userEmail; // 유저이메일
 
+    private String userPhone; // 유저전화번호
+
     private String userType; // 유저유형 (유저 or 점주)
+
+    private String profileImage; // 유저 프로필 이미지
+
+    private String userAddress; // 유저 주소
 
     @OneToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
     private Cart cart; // 유저와 장바구니는 일대일 관계
 
     // 생성 메서드
-    public static User createUser(RequestUserDto userDto) {
+    public static User createUser(String userName, String userEmail, String userPhone, String profileImage, String userAddress) {
         User user = new User();
-        user.userEmail = userDto.getUserEmail();
-        user.userType = "유저";
+        user.userName = userName;
+        user.userEmail = userEmail;
+        user.userPhone = userPhone;
+        user.userType = "user";
+        user.profileImage = profileImage;
+        user.userAddress = userAddress;
         return user;
+    }
+
+    // 유저 정보 수정
+    public void updateUser(String userName, String userPhone, String profileImage, String userAddress) {
+        this.userName = userName;
+        this.userPhone = userPhone;
+        this.profileImage = profileImage;
+        this.userAddress = userAddress;
     }
 
     public void setCart(Cart cart) {

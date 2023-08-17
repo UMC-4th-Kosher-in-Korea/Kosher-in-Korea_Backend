@@ -1,6 +1,9 @@
 package com.kusher.kusher_in_korea.auth.controller;
 
-import com.kusher.kusher_in_korea.auth.dto.RequestUserDto;
+import com.kusher.kusher_in_korea.auth.dto.CreateUserDto;
+import com.kusher.kusher_in_korea.auth.dto.LoginDto;
+import com.kusher.kusher_in_korea.auth.dto.UpdateUserDto;
+import com.kusher.kusher_in_korea.image.service.ImageUploadService;
 import com.kusher.kusher_in_korea.ingredient.dto.response.CartDto;
 import com.kusher.kusher_in_korea.ingredient.dto.response.OrdersDto;
 import com.kusher.kusher_in_korea.ingredient.service.OrdersService;
@@ -14,6 +17,7 @@ import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -24,19 +28,31 @@ public class UserController {
     private final UserService userService;
     private final ReviewService reviewService;
     private final OrdersService ordersService;
+    private final ImageUploadService imageUploadService;
 
     // 회원가입
     @PostMapping("/create")
-    public ApiResponse<Long> createUser(@RequestBody RequestUserDto userDto) {
-        Long userId = userService.createUser(userDto);
+    public ApiResponse<Long> createUser(CreateUserDto userDto) throws IOException {
+        String imageUrl = "";
+        if(userDto.getProfileImage() != null) {
+            imageUrl = imageUploadService.uploadImage(userDto.getProfileImage());
+        }
+        Long userId = userService.createUser(userDto, imageUrl);
         return ApiResponse.success(userId, ResponseCode.USER_CREATE_SUCCESS.getMessage());
     }
 
     // 로그인
     @PostMapping("/login")
-    public ApiResponse<UserDto> login(@RequestBody RequestUserDto userDto) {
+    public ApiResponse<UserDto> login(@RequestBody LoginDto userDto) {
         UserDto loginUser = userService.login(userDto);
         return ApiResponse.success(loginUser, ResponseCode.LOGIN_SUCCESS.getMessage());
+    }
+
+    // 유저가 로그인한 적이 있는지 확인
+    @GetMapping("/check/{userEmail}")
+    public ApiResponse<Boolean> checkLogin(@PathVariable String userEmail) {
+        Boolean checkLogin = userService.checkLogin(userEmail);
+        return ApiResponse.success(checkLogin, ResponseCode.LOGIN_SUCCESS.getMessage());
     }
 
     // 유저 정보 조회
@@ -44,6 +60,17 @@ public class UserController {
     public ApiResponse<UserDto> getUser(@PathVariable Long userId) {
         UserDto userDto = userService.getUser(userId);
         return ApiResponse.success(userDto, ResponseCode.USER_READ_SUCCESS.getMessage());
+    }
+
+    // 유저 정보 수정
+    @PutMapping("/{userId}")
+    public ApiResponse<Long> updateUser(@PathVariable Long userId, UpdateUserDto userDto) throws IOException {
+        String imageUrl = "";
+        if(userDto.getProfileImage() != null) {
+            imageUrl = imageUploadService.uploadImage(userDto.getProfileImage());
+        }
+        Long updateUserId = userService.updateUser(userId, userDto, imageUrl);
+        return ApiResponse.success(updateUserId, ResponseCode.USER_UPDATE_SUCCESS.getMessage());
     }
 
     // 유저의 예약 조회
