@@ -29,6 +29,8 @@ public class User {
 
     private String userAddress; // 유저 주소
 
+    private boolean isFirstLogin; // 첫 로그인 여부
+
     @OneToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
     private Cart cart; // 유저와 장바구니는 일대일 관계
@@ -42,6 +44,7 @@ public class User {
         user.userType = "user";
         user.profileImage = profileImage;
         user.userAddress = userAddress;
+        user.isFirstLogin = true; // 회원가입 직후엔 첫 로그인이므로 true
         return user;
     }
 
@@ -57,4 +60,7 @@ public class User {
         this.cart = cart;
     }
 
+    public void setNotFirstLogin(){
+        this.isFirstLogin = false;
+    }
 }

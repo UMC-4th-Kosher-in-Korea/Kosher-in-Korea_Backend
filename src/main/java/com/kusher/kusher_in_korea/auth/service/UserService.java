@@ -53,13 +53,14 @@ public class UserService {
     // 로그인
     public UserDto login(LoginDto userDto) {
         User user = userRepository.findByUserEmail(userDto.getUserEmail()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+        user.setNotFirstLogin(); // 이제 첫 로그인이 아님
         return new UserDto(user);
     }
 
     // 이 이메일로 로그인한 적이 있는지 유무 판정
     public boolean checkLogin(String userEmail) {
         Optional<User> findUsers = userRepository.findByUserEmail(userEmail);
-        return findUsers.isPresent();
+        return findUsers.map(User::isFirstLogin).orElse(false); // 첫 로그인이면 true, 아니면 false
     }
 
     // 유저 정보 수정
