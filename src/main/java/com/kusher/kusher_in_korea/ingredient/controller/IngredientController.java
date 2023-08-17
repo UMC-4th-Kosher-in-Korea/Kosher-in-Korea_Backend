@@ -46,9 +46,9 @@ public class IngredientController {
     }
 
     // 특정 카테고리에 속한 식재료 조회
-    @GetMapping("/api/category/{categoryName}/ingredient")
-    public ApiResponse<List<IngredientDto>> findIngredientsByCategory(@PathVariable("categoryName") String categoryName) {
-        List<IngredientDto> ingredients = ingredientService.findIngredientsByCategory(categoryName);
+    @GetMapping("/api/category/{categoryId}/ingredient")
+    public ApiResponse<Page<IngredientDto>> findIngredientsByCategory(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @PathVariable("categoryId") Long categoryId) {
+        Page<IngredientDto> ingredients = ingredientService.findIngredientsByCategory(PageRequest.of(page, size), categoryId);
         return ApiResponse.success(ingredients, ResponseCode.INGREDIENT_READ_SUCCESS.getMessage());
     }
 
