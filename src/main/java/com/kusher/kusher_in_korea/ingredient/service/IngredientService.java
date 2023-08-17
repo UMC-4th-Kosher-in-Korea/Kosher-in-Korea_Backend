@@ -12,6 +12,7 @@ import com.kusher.kusher_in_korea.util.exception.CustomException;
 import com.kusher.kusher_in_korea.util.exception.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,12 +52,13 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
     }
 
     // 특정 카테고리에 속한 식재료 조회
-    public List<IngredientDto> findIngredientsByCategory(String categoryName) {
-        Category category = categoryRepository.findByName(categoryName).orElseThrow(() -> new CustomException(ResponseCode.CATEGORY_NOT_FOUND));
-        List<Ingredient> ingredients = ingredientRepository.findByCategoryId(category.getId());
-        return ingredients.stream()
-                .map(IngredientDto::new)
-                .collect(Collectors.toList());
+    public Page<IngredientDto> findIngredientsByCategory(Pageable pageable, Long categoryId) {
+        try {
+            Page<Ingredient> ingredients = ingredientRepository.findAllByCategoryId(categoryId, pageable);
+            return ingredients.map(IngredientDto::new);
+        } catch (Exception e) {
+            throw new CustomException(ResponseCode.INGREDIENT_NOT_FOUND);
+        }
     }
 
     /**
