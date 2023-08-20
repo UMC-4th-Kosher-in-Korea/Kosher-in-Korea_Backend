@@ -63,7 +63,7 @@ public class RestaurantController {
 
     // 특정 식당 메뉴 추가 (사진 필요)
     @PostMapping("/{restaurantId}/menu")
-    public ApiResponse<Long> addNewRestaurantMenu(@PathVariable Long restaurantId, @RequestBody CreateRestaurantMenuDto createRestaurantMenuDto) throws IOException {
+    public ApiResponse<Long> addNewRestaurantMenu(@PathVariable Long restaurantId, CreateRestaurantMenuDto createRestaurantMenuDto) throws IOException {
         String imageUrl = null; // 이미지가 없을 경우 null
         if (createRestaurantMenuDto.getMenuImage() != null) { // 이미지가 있을 경우
             imageUrl = imageUploadService.uploadImage(createRestaurantMenuDto.getMenuImage());
