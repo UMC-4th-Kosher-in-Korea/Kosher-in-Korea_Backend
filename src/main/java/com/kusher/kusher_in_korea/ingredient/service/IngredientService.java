@@ -76,9 +76,8 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
 
     // 중복 식재료명 감지
     private void validateDuplicateIngredient(String name) {
-        ingredientRepository.findByName(name).ifPresent(m -> {
-            throw new IllegalStateException("이미 존재하는 식재료입니다.");
-        });
+        if (ingredientRepository.existsByName(name))
+            throw new IllegalStateException(ResponseCode.DUPLICATED_INGREDIENT.getMessage());
     }
 
     // 식재료 수정
@@ -107,9 +106,8 @@ public class IngredientService { // 식재료 및 카테고리를 제어한다.
 
     // 중복 카테고리 감지
     private void validateDuplicateCategory(String name) {
-        categoryRepository.findByName(name).ifPresent(m -> {
-            throw new CustomException(ResponseCode.CATEGORY_NOT_FOUND);
-        });
+        if (categoryRepository.existsByName(name))
+            throw new IllegalStateException(ResponseCode.DUPLICATED_CATEGORY.getMessage());
     }
 
     // 카테고리 수정

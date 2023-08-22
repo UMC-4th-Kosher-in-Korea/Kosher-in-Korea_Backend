@@ -39,6 +39,8 @@ public enum ResponseCode {
     DUPLICATED_USER(HttpStatus.CONFLICT, false,"Duplicated User"),
     DUPLICATED_RESTAURANT(HttpStatus.CONFLICT, false,"Duplicated Restaurant"),
     DUPLICATED_RESERVATION(HttpStatus.CONFLICT, false,"Duplicated Reservation"),
+    DUPLICATED_CATEGORY(HttpStatus.CONFLICT, false,"Duplicated Category"),
+    DUPLICATED_INGREDIENT(HttpStatus.CONFLICT, false,"Duplicated Cart Ingredient"),
 
     /**
      * 500 INTERNAL SERVER ERROR
