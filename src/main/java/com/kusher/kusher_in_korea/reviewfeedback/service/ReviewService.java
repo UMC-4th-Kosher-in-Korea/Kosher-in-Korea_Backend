@@ -17,10 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-@Service
 public class ReviewService {
+
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final RestaurantRepository restaurantRepository;
@@ -34,19 +35,16 @@ public class ReviewService {
                 .orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
 
         // 이미 리뷰를 남겼는지 확인
-        List<Review> reviews = reviewRepository.findByUserIdAndRestaurantId(user.getId(), restaurant.getId());
-        if (!reviews.isEmpty()) {
+        if (reviewRepository.existsByUserIdAndRestaurantId(user.getId(), restaurant.getId()))
             throw new CustomException(ResponseCode.ALREADY_REVIEWED);
-        }
-        Review review = Review.createReview(user, restaurant, createReviewDto, imageUrl);
-        reviewRepository.save(review);
-        return review.getId();
+
+        return reviewRepository.save(Review.createReview(user, restaurant, createReviewDto, imageUrl)).getId();
     }
 
     // 특정 식당에 대한 리뷰 조회
     public List<ReviewDto> getReviewsByRestaurantId(Long restaurantId) {
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
+        if (!restaurantRepository.existsById(restaurantId))
+            throw new CustomException(ResponseCode.RESTAURANT_NOT_FOUND);
         List<Review> reviews = reviewRepository.findByRestaurantId(restaurantId);
 
         return reviews.stream()
@@ -56,8 +54,8 @@ public class ReviewService {
 
     // 특정 유저가 남긴 리뷰 조회
     public List<ReviewDto> getReviewsByUserId(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+        if (userRepository.existsById(userId))
+            throw new CustomException(ResponseCode.USER_NOT_FOUND);
         List<Review> reviews = reviewRepository.findByUserId(userId);
 
         return reviews.stream()
@@ -68,8 +66,8 @@ public class ReviewService {
     // 리뷰 삭제
     @Transactional
     public void deleteReview(Long reviewId) {
-        reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new CustomException(ResponseCode.REVIEW_NOT_FOUND));
+        if (!reviewRepository.existsById(reviewId))
+            throw new CustomException(ResponseCode.REVIEW_NOT_FOUND);
         reviewRepository.deleteById(reviewId);
     }
 

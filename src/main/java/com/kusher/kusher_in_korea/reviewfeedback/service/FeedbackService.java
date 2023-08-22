@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FeedbackService {
 
     private final FeedbackRepository feedbackRepository;
@@ -35,6 +35,5 @@ public class FeedbackService {
     public List<Feedback> getAllFeedbacks() {
         return feedbackRepository.findAll();
     }
-
 }
 

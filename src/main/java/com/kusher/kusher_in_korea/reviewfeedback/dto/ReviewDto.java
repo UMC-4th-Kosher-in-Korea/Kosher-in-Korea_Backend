@@ -1,14 +1,13 @@
 package com.kusher.kusher_in_korea.reviewfeedback.dto;
 
 import com.kusher.kusher_in_korea.reviewfeedback.domain.Review;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@Data
-@NoArgsConstructor
+@Getter
 public class ReviewDto { // 식당별 평가, 내가 한 평가 등을 클라이언트에게 전송할 목적
+
     private Long reviewId; // 평가번호
     private Long userId; // 유저번호
     private Long restaurantId; // 식당번호
@@ -26,5 +25,4 @@ public class ReviewDto { // 식당별 평가, 내가 한 평가 등을 클라이
         this.reviewTime = review.getReviewDateTime();
         this.reviewRating = review.getRating();
     }
-
 }
