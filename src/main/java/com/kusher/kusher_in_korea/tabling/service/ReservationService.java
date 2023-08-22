@@ -95,7 +95,7 @@ public class ReservationService {
     public void cancelReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ResponseCode.RESERVATION_NOT_FOUND));
         if(!reservation.isCancelable()) {
-            throw new IllegalStateException("이미 예약이 취소되었습니다.");
+            throw new CustomException(ResponseCode.ALREADY_CANCELED);
         }
         reservation.cancelReservation();
         reservationRepository.save(reservation);

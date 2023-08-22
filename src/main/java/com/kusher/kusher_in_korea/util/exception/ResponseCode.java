@@ -17,6 +17,7 @@ public enum ResponseCode {
     NOT_RESTAURANT_OWNER(HttpStatus.BAD_REQUEST, false,"Not Restaurant Owner"),
     ALREADY_REVIEWED(HttpStatus.BAD_REQUEST, false,"Already Reviewed"),
     ALREADY_DELIVERED(HttpStatus.BAD_REQUEST, false,"Already Delivered"),
+    ALREADY_CANCELED(HttpStatus.BAD_REQUEST, false,"Already Canceled"),
 
     /**
      * 404 NOT FOUND
