@@ -1,11 +1,9 @@
 package com.kusher.kusher_in_korea.auth.dto;
 
 import com.kusher.kusher_in_korea.auth.domain.User;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
-@NoArgsConstructor
+@Getter
 public class UserDto {
 
     private Long id; // 유저번호
@@ -16,7 +14,7 @@ public class UserDto {
     private String userAddress; // 유저 주소
     private String userType; // 유저유형 (일반유저 or 식당주인)
 
-    public UserDto(User user){
+    public UserDto(User user) {
         this.id = user.getId();
         this.userName = user.getUserName();
         this.userEmail = user.getUserEmail();

@@ -34,7 +34,7 @@ public class UserController {
     @PostMapping("/create")
     public ApiResponse<Long> createUser(CreateUserDto userDto) throws IOException {
         String imageUrl = "";
-        if(userDto.getProfileImage() != null) {
+        if (userDto.getProfileImage() != null) {
             imageUrl = imageUploadService.uploadImage(userDto.getProfileImage());
         }
         Long userId = userService.createUser(userDto, imageUrl);
@@ -66,7 +66,7 @@ public class UserController {
     @PutMapping("/{userId}")
     public ApiResponse<Long> updateUser(@PathVariable Long userId, UpdateUserDto userDto) throws IOException {
         String imageUrl = "";
-        if(userDto.getProfileImage() != null) {
+        if (userDto.getProfileImage() != null) {
             imageUrl = imageUploadService.uploadImage(userDto.getProfileImage());
         }
         Long updateUserId = userService.updateUser(userId, userDto, imageUrl);
