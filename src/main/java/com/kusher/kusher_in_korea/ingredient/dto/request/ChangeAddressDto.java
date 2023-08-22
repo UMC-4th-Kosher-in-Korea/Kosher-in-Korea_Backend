@@ -1,13 +1,13 @@
 package com.kusher.kusher_in_korea.ingredient.dto.request;
 
 import com.kusher.kusher_in_korea.ingredient.domain.Address;
-import com.kusher.kusher_in_korea.ingredient.dto.response.DeliveryDto;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class ChangeAddressDto { // 배송지 변경 기능
+
     private Long deliveryId;
     private Long userId;
     private Address address;

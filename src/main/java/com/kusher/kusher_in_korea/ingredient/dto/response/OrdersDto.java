@@ -2,16 +2,15 @@ package com.kusher.kusher_in_korea.ingredient.dto.response;
 
 import com.kusher.kusher_in_korea.ingredient.domain.Orders;
 import com.kusher.kusher_in_korea.ingredient.domain.OrdersIngredient;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
+@Getter
 public class OrdersDto { // 주문 조회에 대한 응답
+
     private Long orderId;
     private String orderStatus;
     private DeliveryDto delivery;

@@ -1,6 +1,8 @@
 package com.kusher.kusher_in_korea.ingredient.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,7 +11,9 @@ import java.util.List;
 @Entity
 @Getter
 @Table(name = "category")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
     private Long id;

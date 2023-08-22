@@ -1,7 +1,9 @@
 package com.kusher.kusher_in_korea.ingredient.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter @Setter
 @Table(name = "delivery")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Delivery {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,4 +38,3 @@ public class Delivery {
         return delivery;
     }
 }
-

@@ -1,12 +1,11 @@
 package com.kusher.kusher_in_korea.ingredient.dto.response;
 
 import com.kusher.kusher_in_korea.ingredient.domain.Ingredient;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
-@NoArgsConstructor
+@Getter
 public class IngredientDto {
+
     private Long ingredientId;
     private String ingredientName;
     private String ingredientImage;
