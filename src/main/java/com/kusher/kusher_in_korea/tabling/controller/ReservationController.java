@@ -27,9 +27,9 @@ public class ReservationController {
 
     // 예약 생성
     @PostMapping
-    public ApiResponse<Long> createReservations(@RequestBody CreateReservationDto createReservationDto) {
-        Long id = reservationService.createReservation(createReservationDto);
-        return ApiResponse.success(id, ResponseCode.RESERVATION_CREATE_SUCCESS.getMessage());
+    public ApiResponse<ReservationDto> createReservations(@RequestBody CreateReservationDto createReservationDto) {
+        ReservationDto reservationDto = reservationService.createReservation(createReservationDto);
+        return ApiResponse.success(reservationDto, ResponseCode.RESERVATION_CREATE_SUCCESS.getMessage());
     }
 
     // 예약 수정

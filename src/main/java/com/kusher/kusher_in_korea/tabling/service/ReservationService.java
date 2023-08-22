@@ -1,5 +1,6 @@
 package com.kusher.kusher_in_korea.tabling.service;
 
+import com.kusher.kusher_in_korea.auth.domain.User;
 import com.kusher.kusher_in_korea.tabling.domain.Reservation;
 import com.kusher.kusher_in_korea.tabling.domain.Restaurant;
 import com.kusher.kusher_in_korea.tabling.dto.request.CreateReservationDto;
@@ -16,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +28,6 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
     // 전체 예약 조회 (관리자용)
     public List<ReservationDto> findAllReservation() {
@@ -45,15 +43,18 @@ public class ReservationService {
 
     // 예약 생성
     @Transactional
-    public Long createReservation(CreateReservationDto createReservationDto) {
-        Optional<Restaurant> optionalRestaurant = restaurantRepository.findById(createReservationDto.getRestaurantId());
-        Restaurant restaurant = optionalRestaurant.orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
+    public ReservationDto createReservation(CreateReservationDto createReservationDto) {
+        Restaurant restaurant = restaurantRepository.findById(createReservationDto.getRestaurantId()).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND));
         LocalDateTime reservationTime = LocalDateTime.of(createReservationDto.getReservationDate(), createReservationDto.getReservationTime());
         checkAvailableVisitorCount(restaurant, reservationTime, createReservationDto.getNumberOfPeople());
         Reservation reservation = Reservation.createReservation(createReservationDto);
-        reservation.setRestaurant(restaurantRepository.findById(createReservationDto.getRestaurantId()).orElseThrow(() -> new CustomException(ResponseCode.RESTAURANT_NOT_FOUND)));
-        reservation.setUser(userRepository.findById(createReservationDto.getUserId()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND)));
-        return reservationRepository.save(reservation).getId();
+
+        User user = userRepository.findById(createReservationDto.getUserId()).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+        reservation.setRestaurant(restaurant);
+        reservation.setUser(user);
+        user.getCart().clearCart(); // 예약 생성시 장바구니 비우기
+        userRepository.save(user);
+        return new ReservationDto(reservationRepository.save(reservation));
     }
 
     // 그 시간대의 최대 수용인원을 초과하는지 검증하는 메서드
@@ -94,11 +95,10 @@ public class ReservationService {
     @Transactional
     public void cancelReservation(Long reservationId) {
         Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new CustomException(ResponseCode.RESERVATION_NOT_FOUND));
-        if(!reservation.isCancelable()) {
+        if (!reservation.isCancelable()) {
             throw new CustomException(ResponseCode.ALREADY_CANCELED);
         }
         reservation.cancelReservation();
         reservationRepository.save(reservation);
     }
-
 }
