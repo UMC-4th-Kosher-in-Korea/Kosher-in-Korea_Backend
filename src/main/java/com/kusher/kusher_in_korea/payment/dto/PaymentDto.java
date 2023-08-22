@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PaymentDto {
+
     private String id; //결제번호
     private Long userId; //예약 유저 번호
     private String payUid; //결제한 곳 uid

@@ -13,7 +13,6 @@ import lombok.Setter;
 @Setter
 public class payApiResponse {
 
-
     @ApiModelProperty(example = "상태코드")
     private int status;
 

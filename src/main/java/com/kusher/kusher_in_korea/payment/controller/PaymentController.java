@@ -40,29 +40,29 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
     private String apiSecret;
 
     @Autowired
-    public PaymentController(PaymentService paymentService,OrdersService ordersService) {
-        this.api = new IamportClient(apiKey,apiSecret);
+    public PaymentController(PaymentService paymentService, OrdersService ordersService) {
+        this.api = new IamportClient(apiKey, apiSecret);
         this.paymentService = paymentService;
         this.ordersService = ordersService;
     }
 
     // 구매 창 GET
     @GetMapping("/payment")
-    public String paymentPage(Long orderId,HttpSession session, Model model) throws PaymentException {
+    public String paymentPage(Long orderId, HttpSession session, Model model) throws PaymentException {
         log.trace("paymentPage() invoked");
 
-        try{
+        try {
             OrdersDto order = this.ordersService.getOrder(orderId);
 
             User owner = (User) session.getAttribute("__LOGIN__");
 
-            if(owner != null) {
+            if (owner != null) {
                 User user = this.paymentService.getPayUserInfo(owner.getId());
                 model.addAttribute("__USER__", user);
             }
 
             Objects.requireNonNull(order);
-            model.addAttribute("__ORDER__",order);
+            model.addAttribute("__ORDER__", order);
         } catch (Exception e) {
             throw new PaymentException(e);
         }
@@ -77,7 +77,7 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
             @PathVariable(value = "imp_uid") String imp_uid,
             String orderId,
             Long userId) throws IamportResponseException, IOException, PaymentException {
-        log.trace("paymentByImpUid({},{},{}) invoked.",imp_uid,orderId,userId);
+        log.trace("paymentByImpUid({},{},{}) invoked.", imp_uid, orderId, userId);
 
         payApiResponse response = new payApiResponse();
         String result = "";
@@ -86,11 +86,11 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
         //결제 완료 후 DB조작 메서드 실행
         try {
             switch (payment.getStatus()) {
-                case "paid" :
-                    result = this.paymentService.savePayment(payment,userId);
+                case "paid":
+                    result = this.paymentService.savePayment(payment, userId);
 
                     break;
-                case "failed" :
+                case "failed":
                     result = "FAIL:04";
 
                     break;
@@ -98,7 +98,7 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
 
             response.add("result", result);
             response.add("payment_id", payment.getMerchantUid());
-        }catch (PaymentException e) {
+        } catch (PaymentException e) {
             throw new PaymentException(e);
         }
 
@@ -117,9 +117,9 @@ public class PaymentController { // 결제 API 연동을 위한 Controller
     @ResponseBody
     @PostMapping("/refund/{imp_uid}")
     public IamportResponse<Payment> cancelPaymentByImpUid(
-            @PathVariable(value = "imp_uid")String imp_uid,
+            @PathVariable(value = "imp_uid") String imp_uid,
             CancelData cancelData) throws PaymentException {
-        log.trace("cancelPaymentByImpUid({},{}) invoked.", imp_uid,cancelData);
+        log.trace("cancelPaymentByImpUid({},{}) invoked.", imp_uid, cancelData);
 
         return null;
     }

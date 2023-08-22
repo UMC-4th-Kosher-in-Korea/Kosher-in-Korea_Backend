@@ -10,8 +10,8 @@ import javax.persistence.*;
 @Setter
 @Table(name = "payment")
 public class Payment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_number")
     private Long order_id; //결제 개수
 
@@ -28,4 +28,3 @@ public class Payment {
 
     private String payCardName; //카드이름
 }
-
