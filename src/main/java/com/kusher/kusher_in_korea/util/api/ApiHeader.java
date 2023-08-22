@@ -1,6 +1,7 @@
 package com.kusher.kusher_in_korea.util.api;
 
 public class ApiHeader {
+
     private final int resultCode;
     private final String codeName;
 

@@ -91,15 +91,16 @@ public class OrdersService {
     // 주문 취소
     @Transactional
     public void cancelOrder(Long orderId) {
-        Orders order = ordersRepository.findById(orderId).orElseThrow(() -> new CustomException(ResponseCode.ORDERS_NOT_FOUND));
+        Orders order = getOrderById(orderId);
         order.cancel();
     }
 
     // 주문 수정(배송지 수정)
     @Transactional
     public Long updateOrder(Long orderId, ChangeAddressDto changeAddressDto) {
-        Orders order = ordersRepository.findById(orderId).orElseThrow(() -> new CustomException(ResponseCode.ORDERS_NOT_FOUND));
-        if(!Objects.equals(order.getUser().getId(), changeAddressDto.getUserId())) throw new CustomException(ResponseCode.USER_NOT_FOUND);
+        Orders order = getOrderById(orderId);
+        if (!Objects.equals(order.getUser().getId(), changeAddressDto.getUserId()))
+            throw new CustomException(ResponseCode.USER_NOT_FOUND);
         order.getDelivery().setAddress(changeAddressDto.getAddress());
         return order.getId();
     }
@@ -112,7 +113,7 @@ public class OrdersService {
 
     // 특정 주문 조회
     public OrdersDto getOrder(Long orderId) {
-        Orders order = ordersRepository.findById(orderId).orElseThrow(() -> new CustomException(ResponseCode.ORDERS_NOT_FOUND));
+        Orders order = getOrderById(orderId);
         return new OrdersDto(order);
     }
 
@@ -122,4 +123,11 @@ public class OrdersService {
         return orders.stream().map(OrdersDto::new).collect(Collectors.toList());
     }
 
+    public Orders getOrderById(Long orderId) {
+        return ordersRepository.findById(orderId).orElseThrow(() -> new CustomException(ResponseCode.ORDERS_NOT_FOUND));
+    }
+
+    public CartIngredient getCartIngredientById(Long cartIngredientId) {
+        return cartIngredientRepository.findById(cartIngredientId).orElseThrow(() -> new CustomException(ResponseCode.CART_INGREDIENT_NOT_FOUND));
+    }
 }

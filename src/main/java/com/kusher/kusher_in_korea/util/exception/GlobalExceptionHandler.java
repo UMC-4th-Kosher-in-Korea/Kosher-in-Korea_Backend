@@ -11,6 +11,7 @@ import org.springframework.web.context.request.WebRequest;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(value = {CustomException.class})
     // 예외 발생 시 클라이언트에게 전달할 응답을 생성하는 메소드
     public ResponseEntity<ApiResponse> handleCustomException(CustomException e, WebRequest request) {

@@ -1,7 +1,9 @@
 package com.kusher.kusher_in_korea.reviewfeedback.domain;
 
 import com.kusher.kusher_in_korea.auth.domain.User;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Table(name = "feedback")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Feedback {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

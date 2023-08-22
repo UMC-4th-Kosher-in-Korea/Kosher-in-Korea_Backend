@@ -23,8 +23,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -44,8 +44,7 @@ public class UserService {
 
     // 유저명 중복 방지
     public void ValidationDuplicateUser(String userEmail) {
-        Optional<User> findUsers = userRepository.findByUserEmail(userEmail);
-        if (findUsers.isPresent()) {
+        if (userRepository.existsByUserEmail(userEmail)) {
             throw new CustomException(ResponseCode.DUPLICATED_USER);
         }
     }
@@ -60,20 +59,20 @@ public class UserService {
     // 이 이메일로 로그인한 적이 있는지 유무 판정
     public boolean checkLogin(String userEmail) {
         Optional<User> findUsers = userRepository.findByUserEmail(userEmail);
-        return findUsers.map(User::isFirstLogin).orElse(false); // 첫 로그인이면 true, 아니면 false
+        return findUsers.map(User::isFirstLogin).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
     }
 
     // 유저 정보 수정
     @Transactional
     public Long updateUser(Long userId, UpdateUserDto userDto, String imageUrl) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+        User user = getUserById(userId);
         user.updateUser(userDto.getUserName(), userDto.getUserPhone(), imageUrl, userDto.getUserAddress());
         return user.getId();
     }
 
     // 유저 정보 조회
     public UserDto getUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+        User user = getUserById(userId);
         return new UserDto(user);
     }
 
@@ -85,8 +84,12 @@ public class UserService {
 
     // 유저의 장바구니 조회
     public CartDto getUserCart(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
+        User user = getUserById(userId);
         return new CartDto(user.getCart());
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId).orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
     }
 
 }

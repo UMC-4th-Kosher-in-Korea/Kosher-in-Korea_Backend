@@ -1,12 +1,17 @@
 package com.kusher.kusher_in_korea.ingredient.dto.request;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class AddCartIngredientDto { // 장바구니에 재료 추가 요청
+
     private Long cartId;
     private Long ingredientId;
     private int count;
+
+    public void setCartId(Long cartId) {
+        this.cartId = cartId;
+    }
 }

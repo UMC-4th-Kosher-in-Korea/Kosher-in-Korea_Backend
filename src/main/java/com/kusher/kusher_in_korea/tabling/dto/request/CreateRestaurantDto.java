@@ -1,16 +1,15 @@
 package com.kusher.kusher_in_korea.tabling.dto.request;
 
 import com.kusher.kusher_in_korea.tabling.domain.Restaurant;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class CreateRestaurantDto { // 식당 추가 요청
+
     private Long userId; // 식당주인(유저번호)
     private String location; // 식당위치
     private String restaurantName; // 식당이름

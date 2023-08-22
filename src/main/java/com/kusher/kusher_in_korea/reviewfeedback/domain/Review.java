@@ -3,7 +3,9 @@ package com.kusher.kusher_in_korea.reviewfeedback.domain;
 import com.kusher.kusher_in_korea.auth.domain.User;
 import com.kusher.kusher_in_korea.reviewfeedback.dto.CreateReviewDto;
 import com.kusher.kusher_in_korea.tabling.domain.Restaurant;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -11,7 +13,9 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Table(name = "review")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Review {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     private Long id; // 평가번호
@@ -43,5 +47,4 @@ public class Review {
         review.reviewDateTime = LocalDateTime.now();
         return review;
     }
-
 }

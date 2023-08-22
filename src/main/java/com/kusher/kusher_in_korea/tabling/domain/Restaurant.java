@@ -40,7 +40,7 @@ public class Restaurant {
 
     private String description; // 식당설명
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "restaurant", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private List<RestaurantMenu> restaurantMenus = new ArrayList<>(); // 식당메뉴
 
     // 생성 메서드

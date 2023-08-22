@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kusher.kusher_in_korea.auth.domain.User;
 import com.kusher.kusher_in_korea.util.exception.CustomException;
 import com.kusher.kusher_in_korea.util.exception.ResponseCode;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,7 +17,9 @@ import java.util.List;
 @Entity
 @Getter
 @Table(name = "orders")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Orders { // 주문은 유저와 일대다 관계
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -28,10 +32,10 @@ public class Orders { // 주문은 유저와 일대다 관계
 
     private LocalDateTime orderDateTime; // 주문 날짜 및 시간
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private Delivery delivery; // 주문과 배송은 일대일 관계
 
-    @OneToMany(mappedBy = "orders", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "orders", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<OrdersIngredient> ordersIngredientList = new ArrayList<>(); // 주문과 주문상품은 일대다 관계
 
     public void update(Delivery delivery) {

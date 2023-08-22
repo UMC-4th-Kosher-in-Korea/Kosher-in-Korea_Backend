@@ -1,13 +1,17 @@
 package com.kusher.kusher_in_korea.ingredient.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Table(name = "orders_ingredient")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrdersIngredient {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_ingredient_id")
     private Long id;

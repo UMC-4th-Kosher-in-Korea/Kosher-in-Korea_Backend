@@ -11,6 +11,7 @@ import javax.persistence.*;
 @Table(name = "ingredient")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ingredient { // 식재료 테이블
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ingredient_id")
     private Long id;

@@ -31,7 +31,7 @@ public class User {
 
     private boolean isFirstLogin; // 첫 로그인 여부
 
-    @OneToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "cart_id")
     private Cart cart; // 유저와 장바구니는 일대일 관계
 
@@ -60,7 +60,7 @@ public class User {
         this.cart = cart;
     }
 
-    public void setNotFirstLogin(){
+    public void setNotFirstLogin() {
         this.isFirstLogin = false;
     }
 }

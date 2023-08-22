@@ -22,4 +22,6 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long> { 
     Optional<Ingredient> findById(Long id);
 
     Page<Ingredient> findAllByCategoryId(Long categoryId, Pageable pageable);
+
+    boolean existsByName(String name);
 }

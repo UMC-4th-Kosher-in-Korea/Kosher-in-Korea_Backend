@@ -18,4 +18,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     // 이름으로 카테고리 조회
     Optional<Category> findByName(String name);
+
+    boolean existsByName(String name);
 }
