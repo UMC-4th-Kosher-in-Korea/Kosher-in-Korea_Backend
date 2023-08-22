@@ -1,17 +1,14 @@
 package com.kusher.kusher_in_korea.tabling.dto.response;
 
-
 import com.kusher.kusher_in_korea.tabling.domain.Restaurant;
 import com.kusher.kusher_in_korea.tabling.domain.RestaurantMenu;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@NoArgsConstructor
+@Getter
 public class RestaurantDto {
 
     private Long id; // 식당번호

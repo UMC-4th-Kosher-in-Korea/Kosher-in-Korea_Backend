@@ -1,15 +1,15 @@
 package com.kusher.kusher_in_korea.tabling.dto.request;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class CreateReservationDto { // 예약 추가 요청
+
     private Long userId; // 예약자(유저번호)
     private Long restaurantId; // 식당(식당번호)
     private LocalDate reservationDate; // 예약날짜

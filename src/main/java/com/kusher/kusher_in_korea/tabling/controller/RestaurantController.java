@@ -21,6 +21,7 @@ import java.util.List;
 @RequestMapping("/api/restaurant")
 @RequiredArgsConstructor
 public class RestaurantController {
+
     private final RestaurantService restaurantService;
     private final ReviewService reviewService;
     private final ReservationService reservationService;

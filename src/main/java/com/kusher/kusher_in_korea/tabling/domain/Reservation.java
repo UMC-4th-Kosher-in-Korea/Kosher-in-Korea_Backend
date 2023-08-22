@@ -16,8 +16,7 @@ import java.time.LocalTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reservation {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
     private Long id; // 예약번호
 
@@ -25,7 +24,7 @@ public class Reservation {
     @JoinColumn(name = "user_id")
     private User user; // 예약자(유저번호)
 
-    @ManyToOne(fetch = FetchType.LAZY) // 식당 - 예약은 1대다
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE}) // 식당 - 예약은 1대다, 식당이 사라지면 예약도 사라진다
     @JoinColumn(name = "restaurant_id")
     private Restaurant restaurant; // 식당(식당번호)
 
