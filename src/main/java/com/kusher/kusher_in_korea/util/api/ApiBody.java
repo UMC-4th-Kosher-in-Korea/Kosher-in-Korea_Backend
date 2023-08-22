@@ -1,6 +1,7 @@
 package com.kusher.kusher_in_korea.util.api;
 
 public class ApiBody<T> {
+
     private final T data;
     private final T msg;
 
